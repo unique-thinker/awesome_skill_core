@@ -29,8 +29,9 @@ gem 'bootsnap', '>= 1.1.0', require: false
 # gem 'rack-cors'
 
 group :development, :test do
-  # Call 'byebug' anywhere in the code to stop execution and get a debugger console
+  # Call 'binding.pry' anywhere in the code to stop execution and get a debugger console
   gem 'pry', '~> 0.11.3'
+  gem 'dotenv-rails', '~> 2.5'
 end
 
 group :development do
