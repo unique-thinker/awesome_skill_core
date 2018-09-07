@@ -22,3 +22,22 @@ Things you may want to cover:
 * Deployment instructions
 
 * ...
+
+# Awesome Skills
+
+    ## Requirements
+
+        - Ruby 2.5.1
+        - Bundler: http://bundler.io/
+        - Postgres: https://postgresapp.com/
+
+* How to Install
+`bundle install`
+
+setup database
+`rails db:create`
+`rails db:migrate`
+
+Configure your ENV:
+`cp .env.example .env`
+
