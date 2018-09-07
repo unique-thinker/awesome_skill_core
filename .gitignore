@@ -19,7 +19,13 @@
 
 .byebug_history
 
+# Ignore ENV variables
 .env
 
 # Ignore master key for decrypting credentials and more.
 /config/master.key
+
+# Ignore vim temp file
+*.swp
+*.swo
+*.*~*
