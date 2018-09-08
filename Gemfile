@@ -10,6 +10,11 @@ gem 'pg', '1.1.3'
 # Use Puma as the app server
 gem 'puma', '3.12'
 # Build JSON APIs with ease. Read more: https://github.com/rails/jbuilder
+
+# Authentication
+
+gem 'devise', '4.5'
+
 # gem 'jbuilder', '~> 2.5'
 # Use Redis adapter to run Action Cable in production
 # gem 'redis', '~> 4.0'
@@ -38,6 +43,12 @@ group :development, :test do
 
   # Fixtures replacement
   gem 'factory_bot_rails', '~> 4.11'
+
+  # Prints Ruby objects in full color exposing their internal structure
+  gem 'awesome_print', '~> 1.8'
+
+  # Ruby static code analyzer and code formatter
+  gem 'rubocop', '~> 0.58.2'
 end
 
 group :development do
@@ -45,6 +56,9 @@ group :development do
   # Spring speeds up development by keeping your application running in the background. Read more: https://github.com/rails/spring
   gem 'spring'
   gem 'spring-watcher-listen', '~> 2.0.0'
+
+  # Help to kill N+1 queries and unused eager loading
+  gem 'bullet', '~> 5.7', '>= 5.7.6'
 end
 
 group :test do
