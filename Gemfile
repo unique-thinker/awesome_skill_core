@@ -39,6 +39,8 @@ gem 'bootsnap', '>= 1.1.0', require: false
 group :development, :test do
   # Call 'binding.pry' anywhere in the code to stop execution and get a debugger console
   gem 'pry', '~> 0.11.3'
+
+  # Access envirment veriable
   gem 'dotenv-rails', '~> 2.5'
 
   # RSpec (unit tests, some integration tests)
@@ -67,6 +69,7 @@ end
 group :test do
   gem 'database_cleaner', '~> 1.7'
   gem 'faker', '~> 1.9', '>= 1.9.1'
+  gem 'shoulda', '~> 3.6'
 end
 
 
