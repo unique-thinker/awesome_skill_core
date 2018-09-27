@@ -5,6 +5,8 @@ RSpec.describe DeviseTokenAuth::SessionsController, type: :request do
   let!(:user) { create(:user) }
   # Login url
   let(:sign_in_url) { '/auth/sign_in' }
+  # Logout url
+  let(:sign_out_url) { '/auth/sign_out' }
   # set test valid and invalid credentials
   let(:valid_credentials) do
     {
@@ -20,7 +22,7 @@ RSpec.describe DeviseTokenAuth::SessionsController, type: :request do
   end
 
 
-  describe 'POST /login' do
+  describe 'POST /auth/sign_in' do
     context 'with valid credentials' do
       it 'return success response' do 
         post sign_in_url, params: valid_credentials, headers: headers
@@ -40,6 +42,37 @@ RSpec.describe DeviseTokenAuth::SessionsController, type: :request do
         response = json_response
         expect(response[:success]).to eql false
         expect(response[:errors].first).to eql 'Invalid login credentials. Please try again.'
+      end
+    end
+  end
+
+  describe 'DELETE /auth/sign_out' do
+    before do
+      post sign_in_url, params: valid_credentials, headers: headers
+      json_response
+    end
+
+    context 'with valid headers' do
+      it 'return success response' do
+        headers = {
+          'access-token': response.headers['access-token'],
+          'token-type': response.headers['token-type'],
+          'client': response.headers['client'],
+          'expiry': response.headers['expiry'],
+          'uid': response.headers['uid'],
+        }
+        delete sign_out_url, headers: headers
+        expect(response).to have_http_status(:success)
+      end
+    end
+
+    context 'with invalid headers' do
+      it 'return error response' do 
+        delete sign_out_url, headers: {}
+        expect(response).to have_http_status(404)
+        response = json_response
+        expect(response[:success]).to eql false
+        expect(response[:errors].first).to eql 'User was not found or was not logged in.'
       end
     end
   end

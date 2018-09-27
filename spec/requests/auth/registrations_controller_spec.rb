@@ -16,13 +16,13 @@ RSpec.describe DeviseTokenAuth::RegistrationsController, type: :request do
       username: '',
       email: '',
       password: '',
-          password_confirmation: ''
+      password_confirmation: ''
     }.to_json
   end
 
   describe 'POST /signup' do
     context 'create a user' do
-      it 'returns http success' do 
+      it 'returns http success' do
         post '/auth', params: valid_user_params, headers: headers
         expect(response).to have_http_status(:success)
         expect(response.has_header?('access-token')).to eq(true)
