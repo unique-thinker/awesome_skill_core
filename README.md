@@ -41,3 +41,6 @@ setup database
 Configure your ENV:
 `cp .env.example .env`
 
+#Development mode only
+`gem install mailcatcher` Please don't put mailcatcher into your Gemfile. It will conflict with your applications gems at some point.
+

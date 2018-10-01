@@ -5,15 +5,18 @@ ruby '2.5.1'
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '5.2.1'
+
 # Use postgresql as the database for Active Record
 gem 'pg', '1.1.3'
+
 # Use Puma as the app server
 gem 'puma', '3.12'
+
 # Build JSON APIs with ease. Read more: https://github.com/rails/jbuilder
 
 # Authentication
 
-gem 'devise', '4.5'
+gem 'devise_token_auth', '0.2.0'
 
 # gem 'jbuilder', '~> 2.5'
 # Use Redis adapter to run Action Cable in production
@@ -31,11 +34,13 @@ gem 'devise', '4.5'
 gem 'bootsnap', '>= 1.1.0', require: false
 
 # Use Rack CORS for handling Cross-Origin Resource Sharing (CORS), making cross-origin AJAX possible
-# gem 'rack-cors'
+gem 'rack-cors', '1.0.2'
 
 group :development, :test do
   # Call 'binding.pry' anywhere in the code to stop execution and get a debugger console
   gem 'pry', '~> 0.11.3'
+
+  # Access envirment veriable
   gem 'dotenv-rails', '~> 2.5'
 
   # RSpec (unit tests, some integration tests)
@@ -64,6 +69,7 @@ end
 group :test do
   gem 'database_cleaner', '~> 1.7'
   gem 'faker', '~> 1.9', '>= 1.9.1'
+  gem 'shoulda', '~> 3.6'
 end
 
 
