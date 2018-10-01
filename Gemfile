@@ -53,7 +53,7 @@ group :development, :test do
   gem 'awesome_print', '~> 1.8'
 
   # Ruby static code analyzer and code formatter
-  gem 'rubocop', '~> 0.58.2'
+  gem 'rubocop', '~> 0.59.2', require: false
 end
 
 group :development do
