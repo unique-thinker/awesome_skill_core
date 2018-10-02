@@ -1,21 +1,23 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 RSpec.describe DeviseTokenAuth::RegistrationsController, type: :request do
   let(:user) { build(:user) }
   let(:valid_user_params) do
     {
-      username: user.username,
-      email: user.email,
-      password: user.password,
+      username:              user.username,
+      email:                 user.email,
+      password:              user.password,
       password_confirmation: user.password
     }.to_json
   end
 
   let(:invalid_user_params) do
     {
-      username: '',
-      email: '',
-      password: '',
+      username:              '',
+      email:                 '',
+      password:              '',
       password_confirmation: ''
     }.to_json
   end
@@ -34,7 +36,7 @@ RSpec.describe DeviseTokenAuth::RegistrationsController, type: :request do
     end
 
     context 'not created user' do
-      it 'with error respnse' do 
+      it 'with error respnse' do
         post '/auth', params: invalid_user_params, headers: headers
         expect(response).to have_http_status(422)
         response = json_response
