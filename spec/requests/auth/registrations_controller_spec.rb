@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-RSpec.describe DeviseTokenAuth::RegistrationsController, type: :request do
+RSpec.describe Api::Auth::RegistrationsController, type: :request do
   let(:user) { build(:user) }
   let(:valid_user_params) do
     {
