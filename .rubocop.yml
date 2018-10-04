@@ -170,3 +170,6 @@ Style/NumericPredicate:
 # Reset some HoundCI changes back to Rubocop defaults
 Layout/DotPosition:
   EnforcedStyle: leading
+
+Style/ClassAndModuleChildren:
+  Enabled: false
