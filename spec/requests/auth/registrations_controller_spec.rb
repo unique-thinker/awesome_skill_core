@@ -32,6 +32,10 @@ RSpec.describe Api::Auth::RegistrationsController, type: :request do
         expect(user_response[:username]).to eql user.username
         expect(user_response[:email]).to eql user.email
         expect(User.count).to eql 1
+        db_user = User.first
+        expect(db_user.person.persisted?).to eql true
+        expect(db_user.person.profile_name).to eql db_user.username # default profile name
+        expect(db_user.person.owner).to eql db_user
       end
     end
 
