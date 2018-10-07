@@ -11,21 +11,21 @@ class User < ApplicationRecord
 
   # Validations
   validates :username, presence: true, uniqueness: true
-  validates_format_of :username, :with => /\A[A-Za-z0-9_]+\z/
+  validates :username, format: {with: /\A[A-Za-z0-9_]+\z/}
   validates :person, presence: true
   validates_associated :person
 
   # Association
-  has_one :person, inverse_of: :owner, foreign_key: :owner_id
+  has_one :person, inverse_of: :owner, foreign_key: :owner_id, dependent: :destroy
 
   def strip_and_downcase_username
-    if username.present?
-      username.strip!
-      username.downcase!
-    end
+    return if username.blank?
+
+    username.strip!
+    username.downcase!
   end
 
-  ###Helpers############
+  # ##Helpers############
   def self.build(opts={})
     u = User.new(opts)
     u.set_person
@@ -34,7 +34,7 @@ class User < ApplicationRecord
 
   def set_person
     person = Person.new
-    person.profile_name = self.username
+    person.profile_name = username
     self.person = person
   end
 end

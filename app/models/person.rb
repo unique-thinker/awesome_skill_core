@@ -3,10 +3,10 @@
 class Person < ApplicationRecord
   # Validations
   validates :profile_name, presence: true, uniqueness: true
-  validates :profile, :presence => true
+  validates :profile, presence: true
 
   # Association
-  belongs_to :owner, class_name: "User", optional: true
+  belongs_to :owner, class_name: 'User', optional: true
   has_one :profile, dependent: :destroy
   accepts_nested_attributes_for :profile
 
@@ -19,7 +19,7 @@ class Person < ApplicationRecord
   # will not work!  The nil profile will be overriden with an empty one.
   def initialize(params)
     params ||= {}
-    profile_set = params.has_key?(:profile) || params.has_key?("profile")
+    profile_set = params.has_key?(:profile) || params.has_key?('profile')
     params[:profile_attributes] = params.delete(:profile) if params.has_key?(:profile) && params[:profile].is_a?(Hash)
     super
     self.profile ||= Profile.new unless profile_set

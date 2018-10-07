@@ -10,7 +10,7 @@ FactoryBot.define do
       u.person = build(
         :person,
         profile_name: u.username,
-        owner: u
+        owner:        u
       )
     end
   end

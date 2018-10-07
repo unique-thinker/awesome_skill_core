@@ -37,53 +37,53 @@ RSpec.describe User, type: :model do
         expect(user_1).not_to be_valid
       end
 
-      it "requires uniqueness" do
+      it 'requires uniqueness' do
         user_2.save
         user_1.username = user_2.username
         expect(user_1).not_to be_valid
       end
 
-      it "downcases username" do
-        user_1.username = "WeIrDcAsE"
+      it 'downcases username' do
+        user_1.username = 'WeIrDcAsE'
         expect(user_1).to be_valid
-        expect(user_1.username).to eq("weirdcase")
+        expect(user_1.username).to eq('weirdcase')
       end
 
-      it "fails if the requested username is only different in case from an existing username" do
+      it 'fails if the requested username is only different in case from an existing username' do
         user_2.save
         user_1.username = user_2.username.upcase
         expect(user_1).not_to be_valid
       end
 
-      it "strips leading and trailing whitespace" do
-        user_1.username = "      janie   "
+      it 'strips leading and trailing whitespace' do
+        user_1.username = '      janie   '
         expect(user_1).to be_valid
-        expect(user_1.username).to eq("janie")
+        expect(user_1.username).to eq('janie')
       end
 
       it "fails if there's whitespace in the middle" do
-        user_1.username = "bobby tables"
+        user_1.username = 'bobby tables'
         expect(user_1).not_to be_valid
       end
 
       it 'can not contain non url safe characters' do
-        user_1.username = "kittens;"
+        user_1.username = 'kittens;'
         expect(user_1).not_to be_valid
       end
 
       it 'should not contain periods' do
-        user_1.username = "kittens."
+        user_1.username = 'kittens.'
         expect(user_1).not_to be_valid
       end
     end
 
     describe 'of email' do
-      it "requires email address" do
+      it 'requires email address' do
         user_1.email = nil
         expect(user_1).not_to be_valid
       end
 
-      it "requires a unique email address" do
+      it 'requires a unique email address' do
         user_2.save
         user_1.email = user_2.email
         expect(user_1).not_to be_valid

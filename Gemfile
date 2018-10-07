@@ -19,6 +19,9 @@ gem 'puma', '3.12'
 # Authentication
 gem 'devise_token_auth', '0.2.0'
 
+# Countries Information
+gem 'countries', '2.1.4', require: 'countries/global'
+
 # gem 'jbuilder', '~> 2.5'
 # Use Redis adapter to run Action Cable in production
 # gem 'redis', '~> 4.0'
