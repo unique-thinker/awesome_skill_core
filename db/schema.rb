@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2018_10_05_110912) do
+ActiveRecord::Schema.define(version: 2018_10_06_154111) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -22,6 +22,27 @@ ActiveRecord::Schema.define(version: 2018_10_05_110912) do
     t.datetime "updated_at", null: false
     t.index ["owner_id"], name: "index_people_on_owner_id", unique: true
     t.index ["profile_name"], name: "index_people_on_profile_name", unique: true
+  end
+
+  create_table "profiles", force: :cascade do |t|
+    t.string "first_name"
+    t.string "last_name"
+    t.date "birthday"
+    t.string "gender"
+    t.string "status"
+    t.text "bio"
+    t.string "professions"
+    t.string "company"
+    t.string "current_place"
+    t.string "native_place"
+    t.string "state"
+    t.string "country"
+    t.bigint "person_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["first_name"], name: "index_profiles_on_first_name"
+    t.index ["last_name"], name: "index_profiles_on_last_name"
+    t.index ["person_id"], name: "index_profiles_on_person_id", unique: true
   end
 
   create_table "users", force: :cascade do |t|
@@ -53,4 +74,5 @@ ActiveRecord::Schema.define(version: 2018_10_05_110912) do
   end
 
   add_foreign_key "people", "users", column: "owner_id"
+  add_foreign_key "profiles", "people"
 end
