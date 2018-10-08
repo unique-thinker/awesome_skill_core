@@ -9,6 +9,7 @@ RSpec.describe Person, type: :model do
   it { is_expected.to respond_to(:profile_name) }
   it { is_expected.to respond_to(:owner_id) }
   it { should validate_presence_of(:profile_name) }
+  it { should validate_presence_of(:profile) }
   it { should belong_to(:owner) }
   it { should have_one(:profile) }
 

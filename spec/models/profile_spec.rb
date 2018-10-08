@@ -28,6 +28,8 @@ RSpec.describe Profile, type: :model do
         expect(profile).not_to be_valid
       end
 
+      it { should validate_length_of(:first_name).is_at_most(32) }
+
       it 'can be 32 characters long' do
         profile.first_name = 'Hexagoooooooooooooooooooooooooon'
         expect(profile).to be_valid
@@ -45,6 +47,8 @@ RSpec.describe Profile, type: :model do
     end
 
     describe 'of last_name' do
+      it { should validate_length_of(:last_name).is_at_most(32) }
+
       it 'can be 32 characters long' do
         profile.last_name = 'Hexagoooooooooooooooooooooooooon'
         expect(profile).to be_valid
