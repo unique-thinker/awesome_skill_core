@@ -19,6 +19,7 @@ RSpec.describe Profile, type: :model do
   it { is_expected.to respond_to(:country) }
   it { is_expected.to respond_to(:country) }
   it { is_expected.to respond_to(:person_id) }
+  it { should belong_to(:person) }
 
   describe 'validation' do
     describe 'of first_name' do
