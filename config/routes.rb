@@ -11,8 +11,8 @@ Rails.application.routes.draw do
       # sessions:           'devise_token_auth/sessions',
       # token_validations:  'devise_token_auth/token_validations'
     }, skip: [:omniauth_callbacks]
-    scope module: :v1, constraints: ApiVersionConstraint.new('v1', true) do
-      # resources :todos
+    scope module: :v1, constraints: ApiVersionConstraint.new('v1', false) do
+      resource :profile, only: %i[edit update]
     end
   end
   # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
