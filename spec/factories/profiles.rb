@@ -5,7 +5,7 @@ FactoryBot.define do
     first_name { Faker::Name.first_name }
     last_name { Faker::Name.last_name }
     birthday { Faker::Date.birthday(18, 65) }
-    gender { Faker::Gender.binary_type }
+    gender { Faker::Gender.binary_type == 'Male'? 'M': 'F'}
     status { Faker::Friends.quote }
     bio { Faker::HowIMetYourMother.quote }
     professions { Faker::Company.profession }
