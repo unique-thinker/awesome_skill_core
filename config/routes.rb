@@ -2,7 +2,7 @@
 
 Rails.application.routes.draw do
   # namespace the controllers without affecting the URI
-  namespace :api, defaults: {format: :json}, path: '/', as: '' do
+  scope module: :api, defaults: {format: :json}, path: '/' do
     mount_devise_token_auth_for 'User', at: 'auth', controllers: {
       # confirmations:      'devise_token_auth/confirmations',
       # passwords:          'devise_token_auth/passwords',
