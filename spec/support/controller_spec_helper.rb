@@ -2,7 +2,7 @@
 
 module ControllerSpecHelper
   def login(user)
-    post user_session_path, params:  {
+    post '/auth/sign_in', params:  {
       email:    user.email,
       password: user.password
     }.to_json, headers: {
