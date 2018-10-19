@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Request
   module JsonHelpers
     # Parse JSON response to ruby hash
@@ -9,17 +11,17 @@ module Request
   # Our headers helpers module
   module HeadersHelpers
     def headers
-      { 
+      {
         CONTENT_TYPE: 'application/json; charset=utf-8',
-        ACCEPT: 'application/json'
+        ACCEPT:       'application/json'
       }
     end
 
-    def api_header(version = 1)
+    def api_header(version=1)
       request.headers['Accept'] = "application/vnd.marketplace.v#{version}"
     end
 
-    def api_response_format(format = Mime::JSON)
+    def api_response_format(format=Mime::JSON)
       request.headers['Accept'] = "#{request.headers['Accept']},#{format}"
       request.headers['Content-Type'] = format.to_s
     end
