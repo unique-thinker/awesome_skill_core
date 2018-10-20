@@ -9,20 +9,21 @@ RSpec.describe Api::V1::ProfilesController, type: :request do
   let(:update_profile_path) { '/profile' }
   let(:error_message) { 'You need to sign in or sign up before continuing.' }
   let(:valid_profile_params) { build(:profile).attributes.except('id', 'person_id', 'created_at', 'updated_at') }
-  let(:invalid_profile_params) {{
-    first_name:     'a'*40,
-    last_name:      'a'*40,
-    birthday:       1.year.ago,
-    gender:         'male',
-    status:         'status',
-    bio:            'bio'*100,
-    professions:    'Dancing',
-    company:        'Dancing.com',
-    current_place:  'indore',
-    native_place:   'indore',
-    state:          'madhya pradesh',
-    country:        'india'
-  }}
+  let(:invalid_profile_params) {
+     {
+       first_name:    'a' * 40,
+       last_name:     'a' * 40,
+       birthday:      1.year.ago,
+       gender:        'male',
+       status:        'status',
+       bio:           'bio' * 100,
+       professions:   'Dancing',
+       company:       'Dancing.com',
+       current_place: 'indore',
+       native_place:  'indore',
+       state:         'madhya pradesh',
+       country:       'india'
+     }}
 
   describe 'unauthenticated' do
     it 'responds with 401 Unauthorized' do
@@ -45,21 +46,21 @@ RSpec.describe Api::V1::ProfilesController, type: :request do
 
       it 'should contains expected recipe attributes' do
         body = json_response
-        expect(body[:data].keys).to match_array([:id, :type, :attributes, :meta])
-        expect(body[:data][:attributes].keys).to match_array([
-          :first_name,
-          :last_name,
-          :birthday,
-          :gender,
-          :status,
-          :bio,
-          :professions,
-          :company,
-          :current_place,
-          :native_place,
-          :state,
-          :country
-        ])
+        expect(body[:data].keys).to match_array(%i[id type attributes meta])
+        expect(body[:data][:attributes].keys).to match_array(%i[
+                                                               first_name
+                                                               last_name
+                                                               birthday
+                                                               gender
+                                                               status
+                                                               bio
+                                                               professions
+                                                               company
+                                                               current_place
+                                                               native_place
+                                                               state
+                                                               country
+                                                             ])
       end
     end
 
@@ -67,7 +68,7 @@ RSpec.describe Api::V1::ProfilesController, type: :request do
       context 'with valid params' do
         before do
           login(user)
-          patch update_profile_path, params: { profile: valid_profile_params }, headers: valid_headers(response)
+          patch update_profile_path, params: {profile: valid_profile_params}, headers: valid_headers(response)
         end
 
         it 'succeeds' do
@@ -90,13 +91,13 @@ RSpec.describe Api::V1::ProfilesController, type: :request do
       context 'with invalid params' do
         before do
           login(user)
-          patch update_profile_path, params: { profile: invalid_profile_params }, headers: valid_headers(response)
+          patch update_profile_path, params: {profile: invalid_profile_params}, headers: valid_headers(response)
         end
         it 'should return errors' do
           expect(response).to have_http_status(:unprocessable_entity)
           body = json_response
           expect(body[:success]).to eq false
-          expect(body.keys).to match_array([:success, :errors])
+          expect(body.keys).to match_array(%i[success errors])
         end
       end
     end

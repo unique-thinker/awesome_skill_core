@@ -18,7 +18,7 @@ class Api::V1::ProfilesController < Api::BaseController
     if profile.update(profile_attrs)
       head :no_content
     else
-      render json: { success: false, errors: resource_errors(profile) }, status: :unprocessable_entity
+      render json: {success: false, errors: resource_errors(profile)}, status: :unprocessable_entity
     end
   end
 

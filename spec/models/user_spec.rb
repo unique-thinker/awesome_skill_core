@@ -32,7 +32,6 @@ RSpec.describe User, type: :model do
   it { should validate_confirmation_of(:password) }
   it { should have_one(:person) }
 
-
   describe 'validation' do
     describe 'of username' do
       it 'requires presence' do

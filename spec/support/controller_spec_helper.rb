@@ -1,6 +1,10 @@
 # frozen_string_literal: true
 
 module ControllerSpecHelper
+  def initialize(*)
+    @accept = 'application/vnd.awesome-skill.v1+json'
+  end
+
   def login(user)
     post '/auth/sign_in', params:  {
       email:    user.email,
@@ -18,7 +22,6 @@ module ControllerSpecHelper
     expiry      = response.headers['expiry']
     token_type  = response.headers['token-type']
     uid         = response.headers['uid']
-    accept = 'application/vnd.awesome-skill.v1+json'
 
     auth_params = {
       'access-token' => token,
@@ -26,19 +29,18 @@ module ControllerSpecHelper
       'uid'          => uid,
       'expiry'       => expiry,
       'token_type'   => token_type,
-      'ACCEPT'       => 'application/vnd.awesome-skill.v1+json'
+      'ACCEPT'       => @accept
     }
     auth_params
   end
 
   # return invalid headers
   def invalid_headers
-    access_token = 'invalid access-token' 
+    access_token = 'invalid access-token'
     client = 'invalid client'
     expiry = 'invalid expiry'
     token_type = 'invalid token_type'
     uid = 'invalid uid'
-    accept = 'application/vnd.awesome-skill.v1+json'
 
     auth_params = {
       'access-token' => access_token,
@@ -46,7 +48,7 @@ module ControllerSpecHelper
       'uid'          => uid,
       'expiry'       => expiry,
       'token_type'   => token_type,
-      'ACCEPT'       => accept
+      'ACCEPT'       => @accept
     }
     auth_params
   end

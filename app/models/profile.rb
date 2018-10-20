@@ -9,5 +9,5 @@ class Profile < ApplicationRecord
   # Validations
   validates :first_name, :last_name, length: {maximum: 32},
                                      format: {with: /\A[^;]+\z/, allow_blank: true}
-  validates :gender, inclusion: { in: %W(M F), message: 'must be Male or Female' }, allow_blank: true
+  validates :gender, inclusion: {in: %w[M F], message: 'must be Male or Female'}, allow_blank: true
 end

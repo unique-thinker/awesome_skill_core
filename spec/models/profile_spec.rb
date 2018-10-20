@@ -72,7 +72,7 @@ RSpec.describe Profile, type: :model do
       it 'should have only M or F' do
         profile.gender = 'invalid gender'
         expect(profile).not_to be_valid
-        expect(profile.errors[:gender]).to include("must be Male or Female")
+        expect(profile.errors[:gender]).to include('must be Male or Female')
       end
     end
   end
