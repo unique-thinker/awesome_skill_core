@@ -39,4 +39,12 @@ class User < ApplicationRecord
     person.profile_name = username
     self.person = person
   end
+
+  def seed_aspects
+    self.aspects.create(name: 'Family')
+    self.aspects.create(name: 'Friends')
+    self.aspects.create(name: 'Work')
+    aq = self.aspects.create(name: 'Acquaintances')
+    aq
+  end
 end

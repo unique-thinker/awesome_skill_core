@@ -3,6 +3,9 @@
 class Api::Auth::RegistrationsController < DeviseTokenAuth::RegistrationsController
   def create
     super do |resource|
+      if resource.persisted?
+        resource.seed_aspects
+      end
     end
   end
 
