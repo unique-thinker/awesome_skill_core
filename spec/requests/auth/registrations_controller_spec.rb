@@ -36,6 +36,7 @@ RSpec.describe Api::Auth::RegistrationsController, type: :request do
         expect(db_user.person.persisted?).to eql true
         expect(db_user.person.profile_name).to eql db_user.username # default profile name
         expect(db_user.person.owner).to eql db_user
+        expect(db_user.aspects.count).to eql 4
       end
     end
 
@@ -45,6 +46,9 @@ RSpec.describe Api::Auth::RegistrationsController, type: :request do
         expect(response).to have_http_status(422)
         response = json_response
         expect(User.count).to eql 0
+        expect(Person.count).to eql 0
+        expect(Profile.count).to eql 0
+        expect(Aspect.count).to eql 0
         user_response_data = response[:data]
         user_response_errors = response[:errors]
         expect(user_response_data[:username]).to eql ''
