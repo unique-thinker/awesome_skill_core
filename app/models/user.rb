@@ -18,6 +18,8 @@ class User < ApplicationRecord
   # Association
   has_one :person, inverse_of: :owner, foreign_key: :owner_id, dependent: :destroy
 
+  has_many :aspects, -> { order('order_id ASC') }
+
   def strip_and_downcase_username
     return if username.blank?
 
