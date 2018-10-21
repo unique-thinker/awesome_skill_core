@@ -40,6 +40,20 @@ gem 'bootsnap', '>= 1.1.0', require: false
 # making cross-origin AJAX possible
 gem 'rack-cors', '1.0.2'
 
+group :development do
+  gem 'listen', '>= 3.0.5', '< 3.2'
+  # Spring speeds up development by keeping your application running
+  # in the background. Read more: https://github.com/rails/spring
+  gem 'spring'
+  gem 'spring-watcher-listen', '~> 2.0.0'
+end
+
+group :test do
+  gem 'database_cleaner', '~> 1.7'
+  gem 'faker', '~> 1.9', '>= 1.9.1'
+  gem 'shoulda', '~> 3.6'
+end
+
 group :development, :test do
   # Use Capistrano for deployment
   # gem 'capistrano-rails', group: :development
@@ -62,23 +76,9 @@ group :development, :test do
 
   # Ruby static code analyzer and code formatter
   gem 'rubocop', '~> 0.59.2', require: false
-end
-
-group :development do
-  gem 'listen', '>= 3.0.5', '< 3.2'
-  # Spring speeds up development by keeping your application running
-  # in the background. Read more: https://github.com/rails/spring
-  gem 'spring'
-  gem 'spring-watcher-listen', '~> 2.0.0'
 
   # Help to kill N+1 queries and unused eager loading
   gem 'bullet', '~> 5.7', '>= 5.7.6'
-end
-
-group :test do
-  gem 'database_cleaner', '~> 1.7'
-  gem 'faker', '~> 1.9', '>= 1.9.1'
-  gem 'shoulda', '~> 3.6'
 end
 
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
