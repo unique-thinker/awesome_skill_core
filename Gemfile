@@ -23,6 +23,9 @@ gem 'countries', '2.1.4', require: 'countries/global'
 # Active record object serializer
 gem 'fast_jsonapi', '1.4'
 
+# GUID generation
+gem 'uuid', '2.3.9'
+
 # Build JSON APIs with ease. Read more: https://github.com/rails/jbuilder
 # gem 'jbuilder', '~> 2.5'
 # Use Redis adapter to run Action Cable in production

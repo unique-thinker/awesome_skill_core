@@ -99,6 +99,8 @@ GEM
     loofah (2.2.2)
       crass (~> 1.0.2)
       nokogiri (>= 1.5.9)
+    macaddr (1.7.1)
+      systemu (~> 2.6.2)
     mail (2.7.0)
       mini_mime (>= 0.1.1)
     marcel (0.3.2)
@@ -206,6 +208,7 @@ GEM
       actionpack (>= 4.0)
       activesupport (>= 4.0)
       sprockets (>= 3.0.0)
+    systemu (2.6.5)
     thor (0.20.0)
     thread_safe (0.3.6)
     tzinfo (1.2.5)
@@ -213,6 +216,8 @@ GEM
     unicode-display_width (1.4.0)
     unicode_utils (1.4.0)
     uniform_notifier (1.11.0)
+    uuid (2.3.9)
+      macaddr (~> 1.0)
     warden (1.2.7)
       rack (>= 1.0)
     websocket-driver (0.7.0)
@@ -245,6 +250,7 @@ DEPENDENCIES
   spring
   spring-watcher-listen (~> 2.0.0)
   tzinfo-data
+  uuid (= 2.3.9)
 
 RUBY VERSION
    ruby 2.5.1p57
