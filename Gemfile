@@ -26,15 +26,19 @@ gem 'fast_jsonapi', '1.4'
 # GUID generation
 gem 'uuid', '2.3.9'
 
+# File uploading
+gem 'carrierwave', '1.2.3'
+gem 'fog-aws', '3.3'
+
+# Use ActiveStorage variant
+gem 'mini_magick', '4.9.2'
+
 # Build JSON APIs with ease. Read more: https://github.com/rails/jbuilder
 # gem 'jbuilder', '~> 2.5'
 # Use Redis adapter to run Action Cable in production
 # gem 'redis', '~> 4.0'
 # Use ActiveModel has_secure_password
 # gem 'bcrypt', '~> 3.1.7'
-
-# Use ActiveStorage variant
-# gem 'mini_magick', '~> 4.8'
 
 # Reduces boot times through caching; required in config/boot.rb
 gem 'bootsnap', '>= 1.1.0', require: false
