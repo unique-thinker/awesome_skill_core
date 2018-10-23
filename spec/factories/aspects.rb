@@ -2,7 +2,7 @@
 
 FactoryBot.define do
   factory :aspect do
-    name { %w[Family Friends Work Acquaintances].sample }
+    sequence(:name) { |n| "#{%w[Family Friends Work Acquaintances].sample}#{n}" }
     user
   end
 end
