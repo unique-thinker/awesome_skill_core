@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 FactoryBot.define do
-  factory :person , aliases: %i[author] do
+  factory :person, aliases: %i[author] do
     profile_name { Faker::Internet.username }
 
     after(:build) do |person|

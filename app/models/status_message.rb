@@ -1,6 +1,8 @@
+# frozen_string_literal: true
+
 class StatusMessage < Post
   # Validations
-  validates_length_of :text, maximum: 65535
+  validates :text, length: {maximum: 65_535}
 
   # don't allow creation of empty status messages
   validate :presence_of_content, on: :create
@@ -12,6 +14,6 @@ class StatusMessage < Post
   end
 
   def presence_of_content
-    errors[:base] << "Cannot create a StatusMessage without content" if text_and_photos_blank?
+    errors[:base] << 'Cannot create a StatusMessage without content' if text_and_photos_blank?
   end
 end

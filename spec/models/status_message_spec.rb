@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 RSpec.describe StatusMessage, type: :model do
@@ -11,30 +13,30 @@ RSpec.describe StatusMessage, type: :model do
   it { is_expected.to respond_to(:type) }
   it { is_expected.to respond_to(:author) }
   it { should belong_to(:author) }
-  it { should validate_length_of(:text).is_at_most(65535) }
+  it { should validate_length_of(:text).is_at_most(65_535) }
 
-  describe "emptiness" do
-    it "needs either a message or at least one photo" do
+  describe 'emptiness' do
+    it 'needs either a message or at least one photo' do
       post = user.build_post(:status_message, text: nil)
       expect(post).not_to be_valid
 
-      post.text = ""
+      post.text = ''
       expect(post).not_to be_valid
 
-      post.text = "wales"
+      post.text = 'wales'
       expect(post).to be_valid
       post.text = nil
     end
 
-    it "also checks for content when author is remote" do
+    it 'also checks for content when author is remote' do
       post = status
       post.text = nil
       expect(post).not_to be_valid
     end
   end
 
-  describe "validation" do
-    it "should not be valid if the author is missing" do
+  describe 'validation' do
+    it 'should not be valid if the author is missing' do
       status.author = nil
       expect(status).not_to be_valid
     end

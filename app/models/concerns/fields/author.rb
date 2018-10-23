@@ -6,7 +6,7 @@ module Fields
 
     def self.included(model)
       model.class_eval do
-        belongs_to :author, class_name: "Person"
+        belongs_to :author, class_name: 'Person'
 
         delegate :diaspora_handle, to: :author
 
