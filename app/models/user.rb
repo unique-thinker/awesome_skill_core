@@ -18,7 +18,7 @@ class User < ApplicationRecord
   # Association
   has_one :person, inverse_of: :owner, foreign_key: :owner_id, dependent: :destroy
 
-  has_many :aspects, -> { order('order_id ASC') }
+  has_many :aspects
 
   def strip_and_downcase_username
     return if username.blank?
@@ -46,5 +46,13 @@ class User < ApplicationRecord
     aspects.create(name: 'Work')
     aq = aspects.create(name: 'Acquaintances')
     aq
+  end
+
+  ######## Posting ########
+  def build_post(class_name, opts={})
+    opts[:author] = person
+
+    model_class = class_name.to_s.camelize.constantize
+    model_class.params_initialize(opts)
   end
 end
