@@ -27,7 +27,7 @@ RSpec.describe Api::V1::ProfilesController, type: :request do
 
   describe 'unauthenticated' do
     it 'responds with 401 Unauthorized' do
-      get edit_profile_path, headers: invalid_headers
+      get edit_profile_path, headers: api_headers
       expect(response).to have_http_status(:unauthorized)
       expect(json_response[:errors][0]).to eq error_message
     end
@@ -37,7 +37,7 @@ RSpec.describe Api::V1::ProfilesController, type: :request do
     describe 'GET /profile/edit' do
       before do
         login(user)
-        get edit_profile_path, headers: valid_headers(response)
+        get edit_profile_path, headers: api_headers(response.headers)
       end
 
       it 'succeeds' do
@@ -68,7 +68,7 @@ RSpec.describe Api::V1::ProfilesController, type: :request do
       context 'with valid params' do
         before do
           login(user)
-          patch update_profile_path, params: {profile: valid_profile_params}, headers: valid_headers(response)
+          patch update_profile_path, params: {profile: valid_profile_params}, headers: api_headers(response.headers)
         end
 
         it 'succeeds' do
@@ -91,7 +91,7 @@ RSpec.describe Api::V1::ProfilesController, type: :request do
       context 'with invalid params' do
         before do
           login(user)
-          patch update_profile_path, params: {profile: invalid_profile_params}, headers: valid_headers(response)
+          patch update_profile_path, params: {profile: invalid_profile_params}, headers: api_headers(response.headers)
         end
         it 'should return errors' do
           expect(response).to have_http_status(:unprocessable_entity)
