@@ -3,7 +3,8 @@
 class CreateAspects < ActiveRecord::Migration[5.2]
   def change
     create_table :aspects do |t|
-      t.string :name, null: false
+      t.string     :name, null: false
+      t.integer    :order_id
       t.references :user, null: false, index: true, foreign_key: true
 
       t.timestamps

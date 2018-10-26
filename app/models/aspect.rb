@@ -9,8 +9,7 @@ class Aspect < ApplicationRecord
   validates :name, uniqueness: {scope: :user_id, case_sensitive: false}
   validates_associated :user
 
-  # before_validation do
-  #   binding.pry
-  #   name.strip!
-  # end
+  before_create do
+    self.order_id ||= Aspect.where(user_id: user_id).maximum(:order_id || 0).to_i + 1
+  end
 end
