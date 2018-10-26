@@ -27,6 +27,9 @@ require 'rspec/rails'
 #
 Dir[Rails.root.join('spec', 'support', '*.rb')].each {|f| require f }
 
+# Set global variable of directories
+$fixtures_dir = "#{Rails.root}/spec/fixtures"
+
 # Checks for pending migrations and applies them before tests are run.
 # If you are not using ActiveRecord, you can remove these lines.
 begin
@@ -108,6 +111,13 @@ RSpec.configure do |config|
     config.after(:each) do
       Bullet.perform_out_of_channel_notifications if Bullet.notification?
       Bullet.end_request
+    end
+  end
+
+  # CarrierWave
+  config.after(:all) do
+    if Rails.env.test?
+      FileUtils.rm_rf(Dir["#{Rails.root}/tmp/spec/uploads"])
     end
   end
 end
