@@ -50,9 +50,21 @@ class User < ApplicationRecord
 
   ######## Posting ########
   def build_post(class_name, opts={})
-    opts[:author] = person
-
     model_class = class_name.to_s.camelize.constantize
     model_class.params_initialize(opts)
+  end
+
+  def aspects_from_ids(aspect_ids)
+    if aspect_ids == "all" || aspect_ids == :all
+      self.aspects
+    else
+      aspects.where(:id => aspect_ids).to_a
+    end
+  end
+
+  def add_to_streams(post, aspects_to_insert)
+    aspects_to_insert.each do |aspect|
+      aspect << post
+    end
   end
 end
