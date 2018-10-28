@@ -19,7 +19,7 @@ FactoryBot.define do
       u.person.profile.save
     end
 
-    factory :user_with_aspect do
+    factory :user_with_aspects do
       after(:create) do |u|
         u.aspects = create_list(:aspect, 4, user: u)
       end
