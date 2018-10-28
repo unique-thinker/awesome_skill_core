@@ -6,16 +6,10 @@ class CreatePosts < ActiveRecord::Migration[5.2]
       t.boolean     :public, default: false, null: false
       t.string      :guid, index: {unique: true}, null: false
       t.text        :text
-      t.string      :type, limit: 40, null: false
-      t.references  :author,
-                    references:  :people,
-                    foreign_key: {to_table: :people},
-                    index:       true,
-                    null:        false
+      t.references  :postable, polymorphic: true, index: true
 
       t.timestamps
     end
-    add_index :posts, %i[id type]
-    add_index :posts, %i[id type created_at]
+    add_index :posts, %i[id postable_type created_at]
   end
 end
