@@ -2,11 +2,26 @@
 
 class Post < ApplicationRecord
   include Fields::Guid
-  include Fields::Author
+
   # Association
-  # belongs_to :auther, class_name: 'Person'
+  belongs_to :postable, polymorphic: true
+  has_many :pictures, as: :imageable, :dependent => :destroy
+
+  # Validations
+  validates :text, length: {maximum: 65_535}
+  validate :presence_of_content, on: :create
 
   def self.params_initialize(params)
-    new(params.to_hash.stringify_keys.slice(*column_names, 'author'))
+    new(params.to_hash.stringify_keys.slice(*column_names))
+  end
+
+  private
+
+  def text_and_pictures_blank?
+    text.blank? && !pictures.any?
+  end
+
+  def presence_of_content
+    errors[:base] << 'Cannot create a Picture without content' if text_and_pictures_blank?
   end
 end
