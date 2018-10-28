@@ -10,13 +10,14 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2018_10_21_103604) do
+ActiveRecord::Schema.define(version: 2018_10_23_143254) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
   create_table "aspects", force: :cascade do |t|
     t.string "name", null: false
+    t.integer "order_id"
     t.bigint "user_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -33,18 +34,35 @@ ActiveRecord::Schema.define(version: 2018_10_21_103604) do
     t.index ["profile_name"], name: "index_people_on_profile_name", unique: true
   end
 
+  create_table "pictures", force: :cascade do |t|
+    t.boolean "public", default: false, null: false
+    t.string "guid", null: false
+    t.text "text"
+    t.text "remote_image_path"
+    t.string "remote_image_name"
+    t.string "random_string"
+    t.string "processed_image"
+    t.integer "height"
+    t.integer "width"
+    t.string "imageable_type"
+    t.bigint "imageable_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["guid"], name: "index_pictures_on_guid", unique: true
+    t.index ["imageable_type", "imageable_id"], name: "index_pictures_on_imageable_type_and_imageable_id"
+  end
+
   create_table "posts", force: :cascade do |t|
     t.boolean "public", default: false, null: false
     t.string "guid", null: false
     t.text "text"
-    t.string "type", limit: 40, null: false
-    t.bigint "author_id", null: false
+    t.string "postable_type"
+    t.bigint "postable_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["author_id"], name: "index_posts_on_author_id"
     t.index ["guid"], name: "index_posts_on_guid", unique: true
-    t.index ["id", "type", "created_at"], name: "index_posts_on_id_and_type_and_created_at"
-    t.index ["id", "type"], name: "index_posts_on_id_and_type"
+    t.index ["id", "postable_type", "created_at"], name: "index_posts_on_id_and_postable_type_and_created_at"
+    t.index ["postable_type", "postable_id"], name: "index_posts_on_postable_type_and_postable_id"
   end
 
   create_table "profiles", force: :cascade do |t|
@@ -98,6 +116,5 @@ ActiveRecord::Schema.define(version: 2018_10_21_103604) do
 
   add_foreign_key "aspects", "users"
   add_foreign_key "people", "users", column: "owner_id"
-  add_foreign_key "posts", "people", column: "author_id"
   add_foreign_key "profiles", "people"
 end
