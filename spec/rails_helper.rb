@@ -117,7 +117,7 @@ RSpec.configure do |config|
   # CarrierWave
   config.after(:all) do
     if Rails.env.test?
-      FileUtils.rm_rf(Dir["#{Rails.root}/tmp/spec/uploads"])
+      FileUtils.rm_rf(CarrierWave::Uploader::Base.root)
     end
   end
 end
