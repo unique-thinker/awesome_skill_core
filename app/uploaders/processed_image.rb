@@ -1,9 +1,14 @@
 # frozen_string_literal: true
 
 class ProcessedImage < ImageUploader
+  after :remove, :delete_empty_upstream_dirs
 
   def store_dir
-    'uploads/images'
+    "#{base_store_dir}/#{model.random_string[0..5]}"
+  end
+
+  def base_store_dir
+    "uploads/#{model.guid}"
   end
 
   def filename
@@ -34,5 +39,15 @@ class ProcessedImage < ImageUploader
       end
       img
     end
+  end
+
+  def delete_empty_upstream_dirs
+    path = ::File.expand_path(store_dir, root)
+    Dir.delete(path) # fails if path not empty dir
+
+    path = ::File.expand_path(base_store_dir, root)
+    Dir.delete(path) # fails if path not empty dir
+  rescue SystemCallError
+    true # nothing, the dir is not empty
   end
 end
