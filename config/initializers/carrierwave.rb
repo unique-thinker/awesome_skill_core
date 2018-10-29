@@ -1,9 +1,11 @@
 # frozen_string_literal: true
 
 CarrierWave.configure do |config|
-  if !Rails.env.test? && ENV['S3_BUCKET_ENABLE'] == 'true'
-    config.fog_provider = "fog/aws"
-    require "carrierwave/storage/fog"
+  config.enable_processing = true
+
+  if Rails.env.production?
+    config.fog_provider = 'fog/aws'
+    require 'carrierwave/storage/fog'
     config.storage = :fog
     config.cache_dir = Rails.root.join('tmp', 'uploads').to_s
     config.fog_credentials = {
@@ -12,27 +14,13 @@ CarrierWave.configure do |config|
         aws_secret_access_key: '',
         region:                ''
     }
+  elsif Rails.env.development?
+    config.storage = :file
+    config.root = Rails.root.join('storage', 'development').to_s
   elsif Rails.env.test?
-    CarrierWave.configure do |config|
-      config.storage = :file
-      config.enable_processing = false
-    end
+    config.storage = :file
+    config.root = Rails.root.join('storage', 'test').to_s
   else
     config.storage = :file
   end
-end
-
-if defined?(CarrierWave)
-  CarrierWave::Uploader::Base.descendants.each do |klass|
-    next if klass.anonymous?
-    klass.class_eval do
-      def cache_dir
-        "#{Rails.root}/tmp/spec/uploads/tmp"
-      end 
-               
-      def store_dir
-        "#{Rails.root}/tmp/spec/uploads/#{model.class.to_s.underscore}/#{mounted_as}/#{model.id}"
-      end 
-    end 
-  end 
 end
