@@ -15,11 +15,11 @@ FactoryBot.define do
       end
     end
 
-    # factory(:post_in_aspect) do
-    #   public { false }
-    #   after(:build) do |p|
-    #     p.aspects << p.postable.owner.aspects.first
-    #   end
-    # end
+   factory(:post_in_aspect) do
+     public { false }
+     after(:build) do |p|
+       p.aspects << p.postable.owner.aspects.first
+     end
+   end
   end
 end
