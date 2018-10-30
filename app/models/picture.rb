@@ -1,5 +1,5 @@
 class Picture < ApplicationRecord
-  include Fields::Guid
+  include Shareable
 
   # Association
   belongs_to :imageable, polymorphic: true

@@ -1,8 +1,7 @@
 # frozen_string_literal: true
 
 class Post < ApplicationRecord
-  include Fields::Guid
-
+  include Shareable
   # Association
   belongs_to :postable, polymorphic: true
   has_many :pictures, as: :imageable, :dependent => :destroy
