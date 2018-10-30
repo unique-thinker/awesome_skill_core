@@ -10,10 +10,21 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2018_10_23_143254) do
+ActiveRecord::Schema.define(version: 2018_10_29_072914) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "aspect_visibilities", force: :cascade do |t|
+    t.bigint "aspect_id"
+    t.string "shareable_type"
+    t.bigint "shareable_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["aspect_id", "shareable_id", "shareable_type"], name: "shareable_and_aspect_id", unique: true
+    t.index ["aspect_id"], name: "index_aspect_visibilities_on_aspect_id"
+    t.index ["shareable_type", "shareable_id"], name: "index_aspect_visibilities_on_shareable_id_and_shareable_type"
+  end
 
   create_table "aspects", force: :cascade do |t|
     t.string "name", null: false
@@ -114,6 +125,7 @@ ActiveRecord::Schema.define(version: 2018_10_23_143254) do
     t.index ["username"], name: "index_users_on_username", unique: true
   end
 
+  add_foreign_key "aspect_visibilities", "aspects"
   add_foreign_key "aspects", "users"
   add_foreign_key "people", "users", column: "owner_id"
   add_foreign_key "profiles", "people"
