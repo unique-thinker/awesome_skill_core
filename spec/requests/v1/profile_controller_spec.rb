@@ -7,7 +7,6 @@ RSpec.describe Api::V1::ProfilesController, type: :request do
   let!(:user) { create(:user) }
   let(:edit_profile_path) { '/profile/edit' }
   let(:update_profile_path) { '/profile' }
-  let(:error_message) { 'You need to sign in or sign up before continuing.' }
   let(:valid_profile_params) { build(:profile).attributes.except('id', 'person_id', 'created_at', 'updated_at') }
   let(:invalid_profile_params) {
      {
@@ -29,7 +28,6 @@ RSpec.describe Api::V1::ProfilesController, type: :request do
     it 'responds with 401 Unauthorized' do
       get edit_profile_path, headers: api_headers
       expect(response).to have_http_status(:unauthorized)
-      expect(json_response[:errors][0]).to eq error_message
     end
   end
 

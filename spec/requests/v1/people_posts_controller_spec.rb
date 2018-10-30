@@ -25,7 +25,6 @@ RSpec.describe Api::V1::PeoplePostsController, type: :request do
     it 'responds with 401 Unauthorized' do
       post create_post_path, headers: api_headers
       expect(response).to have_http_status(:unauthorized)
-      expect(json_response[:errors][0]).to eq error_message
     end
   end
 
