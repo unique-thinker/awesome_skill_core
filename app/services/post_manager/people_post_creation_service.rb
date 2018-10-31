@@ -37,5 +37,8 @@ module PostManager
       user.add_to_streams(post, aspects)
       post.pictures.each {|pic| user.add_to_streams(pic, aspects) }
     end
+
+    class BadAspectsIDs < RuntimeError
+    end
   end
 end
