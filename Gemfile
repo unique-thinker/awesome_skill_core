@@ -15,7 +15,7 @@ gem 'pg', '1.1.3'
 gem 'puma', '3.12'
 
 # Authentication
-gem 'devise_token_auth', '0.2.0'
+gem 'devise_token_auth', '1.0'
 
 # Countries Information
 gem 'countries', '2.1.4', require: 'countries/global'
