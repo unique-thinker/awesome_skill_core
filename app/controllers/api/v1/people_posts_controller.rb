@@ -9,15 +9,25 @@ class Api::V1::PeoplePostsController < Api::BaseController
     pictures = []
     post_params = normalize_params.merge!({user: current_user})
     normalize_params.delete(:image_files).each do |image_file|
-      pic = PictureCreationService.call({ image_file: image_file })
+      pic = PictureCreationService.call(post_params.slice(:public, :user).merge!(image_file: image_file))
       pictures << pic
     end
     post = PostManager::PeoplePostCreationService.call(post_params.merge(pictures: pictures))
     if post.save
+      options = {include: [:pictures]}
+      render json: Api::V1::PostSerializer.new(post, options), status: :created
     else
       render json: {success: false, errors: resource_errors(post)}, status: :unprocessable_entity
     end
-    #binding.pry
+    rescue PostManager::PeoplePostCreationService::BadAspectsIDs
+      render json: { error: 'Provided aspects IDs aren\'t applicable (non-existent or not owned)' }, status: 422
+    rescue StandardError => error
+      handle_create_error(error)
+  end
+
+  def handle_create_error(error)
+    logger.debug error
+    render json: { error: error.message}, status: 403
   end
 
   def normalize_params
