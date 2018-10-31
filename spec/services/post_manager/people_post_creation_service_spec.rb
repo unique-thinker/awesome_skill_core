@@ -43,8 +43,8 @@ RSpec.describe PostManager::PeoplePostCreationService, type: :service do
       it "raises exception if aspects_ids don't contain any applicable aspect identifiers" do
         bad_ids = [aspect_list.map(&:id).max.next, user_2.aspects.first.id].map(&:to_s)
         expect {
-          PostManager::PeoplePostCreationService.call(post_params.merge!(user: user_1, aspects_ids: bad_ids))
-        }.to raise_error(PostManager::PeoplePostCreationService::BadAspectsIDs)
+          PostManager::PeoplePostCreationService.call(post_params.merge!(user: user_1, aspect_ids: bad_ids))
+        }.to raise_error(AwesomeSkill::BadAspectsIDs)
       end
     end
 
