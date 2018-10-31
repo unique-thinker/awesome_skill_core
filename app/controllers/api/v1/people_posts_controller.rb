@@ -19,7 +19,7 @@ class Api::V1::PeoplePostsController < Api::BaseController
     else
       render json: {success: false, errors: resource_errors(post)}, status: :unprocessable_entity
     end
-  rescue PostManager::PeoplePostCreationService::BadAspectsIDs
+  rescue AwesomeSkill::BadAspectsIDs
     render json:   {error: 'Provided aspects IDs aren\'t applicable (non-existent or not owned)'},
            status: :unprocessable_entity
   rescue StandardError => error

@@ -30,15 +30,12 @@ module PostManager
 
     def load_aspects(aspect_ids)
       @aspects = user.aspects_from_ids(aspect_ids)
-      raise BadAspectsIDs if aspects.empty?
+      raise AwesomeSkill::BadAspectsIDs if aspects.empty?
     end
 
     def add_to_streams(post)
       user.add_to_streams(post, aspects)
       post.pictures.each {|pic| user.add_to_streams(pic, aspects) }
-    end
-
-    class BadAspectsIDs < RuntimeError
     end
   end
 end
