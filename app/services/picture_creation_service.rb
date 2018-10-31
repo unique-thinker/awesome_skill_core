@@ -14,8 +14,9 @@ class PictureCreationService < ApplicationService
   attr_reader :user
 
   def legacy_create(image_params)
+    public = image_params[:public] || false
     image_params[:image_file] = file_handler(image_params)
-    @image = user.build_post(:picture, image_params)
+    @image = user.build_post(:picture, image_params.merge(public: public))
   end
 
   def file_handler(params)
