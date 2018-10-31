@@ -18,7 +18,7 @@ module Request
     end
 
     def normalize_headers(headers)
-      headers.slice('access-token', 'token-type', 'client','uid', 'expiry')
+      headers.slice('access-token', 'token-type', 'client', 'uid', 'expiry')
     end
 
     def api_header_version(version=1)

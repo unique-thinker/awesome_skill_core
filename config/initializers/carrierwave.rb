@@ -9,10 +9,10 @@ CarrierWave.configure do |config|
     config.storage = :fog
     config.cache_dir = Rails.root.join('tmp', 'uploads').to_s
     config.fog_credentials = {
-        provider:              'AWS',
-        aws_access_key_id:     '',
-        aws_secret_access_key: '',
-        region:                ''
+      provider:              'AWS',
+      aws_access_key_id:     '',
+      aws_secret_access_key: '',
+      region:                ''
     }
   elsif Rails.env.development?
     config.storage = :file

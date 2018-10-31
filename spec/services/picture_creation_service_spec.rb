@@ -7,8 +7,8 @@ RSpec.describe :PictureCreationService, type: :service do
   let(:image_params) {
     {
       image_file: Rack::Test::UploadedFile.new(
-          Rails.root.join($fixtures_dir, 'picture.png').to_s, "image/png"
-        )
+        Rails.root.join('spec', 'fixtures', 'picture.png').to_s, 'image/png'
+      )
     }
   }
 
@@ -23,7 +23,7 @@ RSpec.describe :PictureCreationService, type: :service do
       expect(image.processed_image.url).to_not be_nil
     end
 
-    context "with public" do
+    context 'with public' do
       it 'it marks the photos as public' do
         image = PictureCreationService.call(image_params.merge!(user: user, public: true))
         expect(image.public).to be_truthy
@@ -31,4 +31,3 @@ RSpec.describe :PictureCreationService, type: :service do
     end
   end
 end
-

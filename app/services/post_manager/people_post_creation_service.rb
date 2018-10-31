@@ -2,8 +2,7 @@
 
 module PostManager
   class PeoplePostCreationService < ApplicationService
-
-    def initialize(*args, &block)
+    def initialize(*args)
       @params = args.first
       @user = @params.delete(:user)
     end
@@ -19,6 +18,7 @@ module PostManager
     end
 
     private
+
     attr_reader :user, :aspects
 
     def build_people_post(params)

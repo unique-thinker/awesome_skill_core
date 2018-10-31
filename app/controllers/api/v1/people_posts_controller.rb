@@ -7,7 +7,7 @@ class Api::V1::PeoplePostsController < Api::BaseController
 
   def create
     pictures = []
-    post_params = normalize_params.merge!({user: current_user})
+    post_params = normalize_params.merge!(user: current_user)
     normalize_params.delete(:image_files).each do |image_file|
       pic = PictureCreationService.call(post_params.slice(:public, :user).merge!(image_file: image_file))
       pictures << pic
@@ -19,30 +19,31 @@ class Api::V1::PeoplePostsController < Api::BaseController
     else
       render json: {success: false, errors: resource_errors(post)}, status: :unprocessable_entity
     end
-    rescue PostManager::PeoplePostCreationService::BadAspectsIDs
-      render json: { error: 'Provided aspects IDs aren\'t applicable (non-existent or not owned)' }, status: 422
-    rescue StandardError => error
-      handle_create_error(error)
+  rescue PostManager::PeoplePostCreationService::BadAspectsIDs
+    render json:   {error: 'Provided aspects IDs aren\'t applicable (non-existent or not owned)'},
+           status: :unprocessable_entity
+  rescue StandardError => error
+    handle_create_error(error)
   end
 
   def handle_create_error(error)
     logger.debug error
-    render json: { error: error.message}, status: 403
+    render json: {error: error.message}, status: :forbidden
   end
 
   def normalize_params
     params.permit(
-      post_message: [:text],
+      post_message: [:text]
     ).to_h.merge(
-        aspect_ids:        normalize_aspect_ids,
-        public:            [*params[:aspect_ids]].first == "public",
-        image_files: [*params[:image_files]].compact
+      aspect_ids:  normalize_aspect_ids,
+      public:      [*params[:aspect_ids]].first == 'public',
+      image_files: [*params[:image_files]].compact
     )
   end
 
   def normalize_aspect_ids
     aspect_ids = [*params[:aspect_ids]]
-    if aspect_ids.first == "all_aspects"
+    if aspect_ids.first == 'all_aspects'
       current_user.aspect_ids
     else
       aspect_ids

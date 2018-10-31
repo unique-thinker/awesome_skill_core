@@ -27,9 +27,6 @@ require 'rspec/rails'
 #
 Dir[Rails.root.join('spec', 'support', '*.rb')].each {|f| require f }
 
-# Set global variable of directories
-$fixtures_dir = "#{Rails.root}/spec/fixtures"
-
 # Checks for pending migrations and applies them before tests are run.
 # If you are not using ActiveRecord, you can remove these lines.
 begin
@@ -116,8 +113,6 @@ RSpec.configure do |config|
 
   # CarrierWave
   config.after(:all) do
-    if Rails.env.test?
-      FileUtils.rm_rf(CarrierWave::Uploader::Base.root)
-    end
+    FileUtils.rm_rf(CarrierWave::Uploader::Base.root) if Rails.env.test?
   end
 end

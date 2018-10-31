@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Shareable
   def self.included(model)
     model.instance_eval do

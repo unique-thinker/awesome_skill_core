@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Picture < ApplicationRecord
   include Shareable
 
@@ -24,11 +26,11 @@ class Picture < ApplicationRecord
   end
 
   def update_remote_path
-    unless self.processed_image.url.match(/^https?:\/\//)
-      remote_path = "#{ENV['BASE_URL']}#{self.processed_image.url}"
-    else
-      remote_path = self.processed_image.url
-    end
+    remote_path = if processed_image.url =~ %r{^https?:\/\/}
+                    processed_image.url
+                  else
+                    "#{ENV['BASE_URL']}#{processed_image.url}"
+                  end
 
     name_start = remote_path.rindex '/'
     self.remote_image_path = "#{remote_path.slice(0, name_start)}/"

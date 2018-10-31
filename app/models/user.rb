@@ -18,7 +18,7 @@ class User < ApplicationRecord
   # Association
   has_one :person, inverse_of: :owner, foreign_key: :owner_id, dependent: :destroy
 
-  has_many :aspects
+  has_many :aspects, dependent: :destroy
 
   def strip_and_downcase_username
     return if username.blank?
@@ -55,10 +55,10 @@ class User < ApplicationRecord
   end
 
   def aspects_from_ids(aspect_ids)
-    if aspect_ids == "all" || aspect_ids == :all
-      self.aspects
+    if (aspect_ids && ['all', :all]).empty?
+      aspects
     else
-      aspects.where(:id => aspect_ids).to_a
+      aspects.where(id: aspect_ids).to_a
     end
   end
 

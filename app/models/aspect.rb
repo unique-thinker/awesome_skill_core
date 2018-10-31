@@ -20,14 +20,14 @@ class Aspect < ApplicationRecord
     name
   end
 
-  def << (shareable)
+  def <<(shareable)
     case shareable
-      when Post
-        self.posts << shareable
-      when Picture
-        self.pictures << shareable
-      else
-        raise "Unknown shareable type '#{shareable.class.base_class.to_s}'"
+    when Post
+      posts << shareable
+    when Picture
+      pictures << shareable
+    else
+      raise "Unknown shareable type '#{shareable.class.base_class}'"
     end
   end
 end

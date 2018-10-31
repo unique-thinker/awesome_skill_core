@@ -4,7 +4,7 @@ class Post < ApplicationRecord
   include Shareable
   # Association
   belongs_to :postable, polymorphic: true
-  has_many :pictures, as: :imageable, :dependent => :destroy
+  has_many :pictures, as: :imageable, dependent: :destroy
 
   # Validations
   validates :text, length: {maximum: 65_535}
@@ -17,7 +17,7 @@ class Post < ApplicationRecord
   private
 
   def text_and_pictures_blank?
-    text.blank? && !pictures.any?
+    text.blank? && pictures.none?
   end
 
   def presence_of_content

@@ -29,10 +29,11 @@ class ProcessedImage < ImageUploader
   end
 
   private
+
   def efficient_conversion(width, height)
     manipulate! do |img|
-      img.format("png") do |c|
-        c.fuzz        "3%"
+      img.format('png') do |c|
+        c.fuzz '3%'
         c.trim
         c.resize      "#{width}x#{height}>"
         c.resize      "#{width}x#{height}<"

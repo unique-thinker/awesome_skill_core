@@ -13,8 +13,8 @@ Rails.application.routes.draw do
     }, skip: [:omniauth_callbacks]
     scope module: :v1, constraints: ApiVersionConstraint.new('v1', false) do
       resource :profile, only: %i[edit update]
-      resources :people, only: %[show] do
-        resources :people_posts, only: %[create]
+      resources :people, only: %(show) do
+        resources :people_posts, only: %(create)
       end
     end
   end

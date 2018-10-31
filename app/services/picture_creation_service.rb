@@ -1,5 +1,7 @@
+# frozen_string_literal: true
+
 class PictureCreationService < ApplicationService
-  def initialize(*args, &block)
+  def initialize(*args)
     @params = args.first
     @user = @params.delete(:user)
   end
@@ -11,6 +13,7 @@ class PictureCreationService < ApplicationService
   end
 
   private
+
   attr_reader :user
 
   def legacy_create(image_params)
@@ -20,7 +23,7 @@ class PictureCreationService < ApplicationService
   end
 
   def file_handler(params)
-    image_file = params[:image_file] if !params[:images_file].is_a?(String)
+    image_file = params[:image_file] unless params[:image_file].is_a?(String)
   end
 
   def rescuing_image_errors
@@ -34,6 +37,6 @@ class PictureCreationService < ApplicationService
   end
 
   def return_image_error(message)
-    render json: { error: message }
+    render json: {error: message}
   end
 end

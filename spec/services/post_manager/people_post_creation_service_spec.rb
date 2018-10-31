@@ -11,8 +11,8 @@ RSpec.describe PostManager::PeoplePostCreationService, type: :service do
   let(:post_params) {
     {
       post_message: build_attributes(:post).slice(:text),
-      aspect_ids: [aspect.id.to_s],
-      pictures: []
+      aspect_ids:   [aspect.id.to_s],
+      pictures:     []
     }
   }
 
@@ -27,7 +27,7 @@ RSpec.describe PostManager::PeoplePostCreationService, type: :service do
       expect(post.pictures.first).to be_nil
     end
 
-    context "with aspect_ids" do
+    context 'with aspect_ids' do
       it 'creates aspect_visibilities for the post' do
         user_1.aspects.create(name: 'another aspect')
 
@@ -35,7 +35,7 @@ RSpec.describe PostManager::PeoplePostCreationService, type: :service do
         expect(post.aspect_visibilities.map(&:aspect)).to eq([aspect])
       end
 
-      it "does not create aspect_visibilities if the post is public" do
+      it 'does not create aspect_visibilities if the post is public' do
         post = PostManager::PeoplePostCreationService.call(post_params.merge!(user: user_1, public: true))
         expect(post.aspect_visibilities).to be_empty
       end
