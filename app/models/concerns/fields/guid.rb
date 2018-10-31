@@ -5,11 +5,9 @@ module Fields
     extend ActiveSupport::Concern
 
     # Creates a after_initialize callback which calls #set_guid
-    def self.included(model)
-      model.class_eval do
-        after_initialize :set_guid
-        validates :guid, uniqueness: true
-      end
+    included do
+      after_initialize :set_guid
+      validates :guid, uniqueness: true
     end
 
     # @return [String] The model's guid.
