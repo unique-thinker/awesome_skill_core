@@ -38,9 +38,11 @@ ActiveRecord::Schema.define(version: 2018_10_29_072914) do
 
   create_table "people", force: :cascade do |t|
     t.string "profile_name", null: false
-    t.bigint "owner_id"
+    t.string "guid", null: false
+    t.bigint "owner_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["guid"], name: "index_people_on_guid", unique: true
     t.index ["owner_id"], name: "index_people_on_owner_id", unique: true
     t.index ["profile_name"], name: "index_people_on_profile_name", unique: true
   end
@@ -77,6 +79,7 @@ ActiveRecord::Schema.define(version: 2018_10_29_072914) do
   end
 
   create_table "profiles", force: :cascade do |t|
+    t.string "guid", null: false
     t.string "first_name"
     t.string "last_name"
     t.date "birthday"
@@ -89,10 +92,11 @@ ActiveRecord::Schema.define(version: 2018_10_29_072914) do
     t.string "native_place"
     t.string "state"
     t.string "country"
-    t.bigint "person_id"
+    t.bigint "person_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["first_name"], name: "index_profiles_on_first_name"
+    t.index ["guid"], name: "index_profiles_on_guid", unique: true
     t.index ["last_name"], name: "index_profiles_on_last_name"
     t.index ["person_id"], name: "index_profiles_on_person_id", unique: true
   end

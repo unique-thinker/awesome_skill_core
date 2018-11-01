@@ -3,6 +3,7 @@
 class CreateProfiles < ActiveRecord::Migration[5.2]
   def change
     create_table :profiles do |t|
+      t.string :guid, index: {unique: true}, null: false
       t.string   :first_name, index: true
       t.string   :last_name,  index: true
       t.date     :birthday
@@ -15,7 +16,7 @@ class CreateProfiles < ActiveRecord::Migration[5.2]
       t.string   :native_place
       t.string   :state
       t.string   :country
-      t.references :person, index: {unique: true}, foreign_key: true
+      t.references :person, index: {unique: true}, foreign_key: true, null: false
 
       t.timestamps
     end
