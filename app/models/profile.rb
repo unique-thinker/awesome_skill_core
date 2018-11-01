@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 class Profile < ApplicationRecord
+  include Fields::Guid
   include CountriesWithStates
 
   # Association
