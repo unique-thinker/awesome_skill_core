@@ -14,6 +14,6 @@ FactoryBot.define do
     native_place { Faker::Address.city }
     state { Faker::Address.state }
     country { Faker::Address.country }
-    person
+    person { build(:user).person }
   end
 end

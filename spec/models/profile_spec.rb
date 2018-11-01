@@ -5,6 +5,7 @@ require 'rails_helper'
 RSpec.describe Profile, type: :model do
   let(:profile) { build(:profile) }
 
+  it { is_expected.to respond_to(:guid) }
   it { is_expected.to respond_to(:first_name) }
   it { is_expected.to respond_to(:last_name) }
   it { is_expected.to respond_to(:birthday) }
