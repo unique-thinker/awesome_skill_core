@@ -9,7 +9,7 @@ class CreatePeople < ActiveRecord::Migration[5.2]
                    references:  :users,
                    foreign_key: {to_table: :users},
                    index:       {unique: true},
-                   null: false
+                   null:        false
 
       t.timestamps
     end

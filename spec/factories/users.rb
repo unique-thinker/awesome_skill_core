@@ -7,11 +7,13 @@ FactoryBot.define do
     password { Faker::Internet.password }
 
     after(:build) do |u|
-      u.person = build(
-        :person,
-        profile_name: u.username,
-        owner:        u
-      ) unless u.person
+      unless u.person
+        u.person = build(
+          :person,
+          profile_name: u.username,
+          owner:        u
+        )
+      end
     end
 
     after(:create) do |u|
@@ -24,9 +26,7 @@ FactoryBot.define do
         u.aspects = build_list(:aspect, 4, user: u)
       end
 
-      after(:create) do |u|
-        u.save
-      end
+      after(:create, &:save)
     end
   end
 end

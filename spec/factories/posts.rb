@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 FactoryBot.define do
-  factory :post do |post|
+  factory :post do |_post|
     text { Faker::Markdown.emphasis }
     association :postable, factory: :person
 
