@@ -142,9 +142,9 @@ ActiveRecord::Schema.define(version: 2018_11_01_045337) do
     t.index ["username"], name: "index_users_on_username", unique: true
   end
 
-  add_foreign_key "aspect_visibilities", "aspects"
+  add_foreign_key "aspect_visibilities", "aspects", on_delete: :cascade
   add_foreign_key "aspects", "users"
   add_foreign_key "comments", "people", column: "author_id", name: "comments_author_id_fk", on_delete: :cascade
   add_foreign_key "people", "users", column: "owner_id"
-  add_foreign_key "profiles", "people"
+  add_foreign_key "profiles", "people", on_delete: :cascade
 end

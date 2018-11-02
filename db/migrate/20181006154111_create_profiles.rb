@@ -16,7 +16,7 @@ class CreateProfiles < ActiveRecord::Migration[5.2]
       t.string   :native_place
       t.string   :state
       t.string   :country
-      t.references :person, index: {unique: true}, foreign_key: true, null: false
+      t.references :person, index: {unique: true, name: :index_profiles_on_person_id}, foreign_key: {on_delete: :cascade}, null: false
 
       t.timestamps
     end
