@@ -11,7 +11,7 @@ FactoryBot.define do
         :person,
         profile_name: u.username,
         owner:        u
-      )
+      ) unless u.person
     end
 
     after(:create) do |u|
@@ -20,8 +20,12 @@ FactoryBot.define do
     end
 
     factory :user_with_aspects do
+      after(:build) do |u|
+        u.aspects = build_list(:aspect, 4, user: u)
+      end
+
       after(:create) do |u|
-        u.aspects = create_list(:aspect, 4, user: u)
+        u.save
       end
     end
   end

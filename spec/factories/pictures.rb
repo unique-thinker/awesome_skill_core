@@ -5,7 +5,7 @@ FactoryBot.define do
     sequence(:random_string) {|_n| SecureRandom.hex(10) }
     height { Faker::Number.between(40, 100) }
     width { Faker::Number.between(40, 60) }
-    pic.imageable {|p| p.association(:post) }
+    association :imageable, factory: :post
     processed_image { Rack::Test::UploadedFile.new(Rails.root.join('spec', 'fixtures', 'picture.png'), 'image/jpeg') }
 
     after(:build, &:update_remote_path)

@@ -3,7 +3,7 @@
 FactoryBot.define do
   factory :post do |post|
     text { Faker::Markdown.emphasis }
-    post.postable {|p| p.association(:user_with_aspects).person }
+    association :postable, factory: :person
 
     factory :post_with_picture do
       after(:build) do |p|

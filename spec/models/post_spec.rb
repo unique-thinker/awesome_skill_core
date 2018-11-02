@@ -3,7 +3,7 @@
 require 'rails_helper'
 
 RSpec.describe Post, type: :model do
-  let!(:user) { create(:user) }
+  let!(:person) { create(:person) }
 
   it { is_expected.to respond_to(:public) }
   it { is_expected.to respond_to(:guid) }
