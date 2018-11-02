@@ -2,6 +2,7 @@
 
 class Person < ApplicationRecord
   include Fields::Guid
+
   # Validations
   validates :profile_name, presence: true, uniqueness: true
   validates :profile, presence: true
