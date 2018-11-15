@@ -8,4 +8,8 @@ module User::SocialActions
   def like!(target, opts={})
     Like::Generator.new(self, target).create!(opts)
   end
+
+  def dislike!(target, opts={})
+    Dislike::Generator.new(self, target).create!(opts)
+  end
 end
