@@ -6,6 +6,8 @@ class User < ApplicationRecord
   devise :database_authenticatable, :registerable,
          :recoverable, :trackable, :validatable
   include DeviseTokenAuth::Concerns::User
+  include Querying
+  include SocialActions
 
   before_validation :strip_and_downcase_username
 
