@@ -15,14 +15,20 @@ module PostConcern
 
   def find_public!(id_or_guid)
     Post.where(post_key(id_or_guid) => id_or_guid).first.tap do |post|
-      raise ActiveRecord::RecordNotFound, "could not find a post with id #{id_or_guid}" unless post
+      unless post
+        raise ActiveRecord::RecordNotFound,
+              "could not find a post with id #{id_or_guid}"
+      end
       raise AwesomeSkill::NonPublic unless post.public?
     end
   end
 
   def find_non_public_by_guid_or_id_with_user!(id_or_guid)
     current_user.find_visible_shareable_by_id(Post, id_or_guid, key: post_key(id_or_guid)).tap do |post|
-      raise ActiveRecord::RecordNotFound, "could not find a post with id #{id_or_guid} for user #{current_user.id}" unless post
+      unless post
+        raise ActiveRecord::RecordNotFound,
+              "could not find a post with id #{id_or_guid} for user #{current_user.id}"
+      end
     end
   end
 

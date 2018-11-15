@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 RSpec.describe Vote, type: :model do
@@ -12,7 +14,7 @@ RSpec.describe Vote, type: :model do
   it { should belong_to(:target) }
   it { should belong_to(:author) }
 
-  it "has a valid factory" do
+  it 'has a valid factory' do
     expect(build(:vote)).to be_valid
   end
 end

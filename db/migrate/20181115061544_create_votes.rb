@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class CreateVotes < ActiveRecord::Migration[5.2]
   def change
     create_table :votes do |t|
@@ -12,7 +14,10 @@ class CreateVotes < ActiveRecord::Migration[5.2]
 
       t.timestamps
     end
-    add_index :votes, %i[target_id author_id target_type], name: :index_votes_on_target_id_and_author_id_and_target_type, unique: true
+    add_index :votes,
+              %i[target_id author_id target_type],
+              name:   :index_votes_on_target_id_and_author_id_and_target_type,
+              unique: true
     add_index :votes, :target_id, name: :index_votes_on_post_id
   end
 end

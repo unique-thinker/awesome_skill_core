@@ -8,7 +8,7 @@ RSpec.describe Api::V1::LikesController, type: :request do
 
   let!(:user_post) { create(:post_in_aspect) }
   let(:user) { user_post.postable.owner }
-  let(:like_valid_params) {{ post_id: user_post.id }}
+  let(:like_valid_params) { {post_id: user_post.id} }
 
   describe 'unauthenticated' do
     it 'responds with 401 Unauthorized' do
@@ -36,7 +36,7 @@ RSpec.describe Api::V1::LikesController, type: :request do
         it 'doesn\'t like a post' do
           another_user_post = create(:post_in_aspect)
           post "/posts/#{another_user_post.id}/likes",
-               params:  { post_id: another_user_post.id },
+               params:  {post_id: another_user_post.id},
                headers: api_headers(response.headers)
           expect(user).not_to receive(:like!)
           expect(response.status).to eq(404)

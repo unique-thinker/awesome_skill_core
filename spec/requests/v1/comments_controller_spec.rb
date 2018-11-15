@@ -8,10 +8,11 @@ RSpec.describe Api::V1::CommentsController, type: :request do
 
   let!(:user_post) { create(:post_in_aspect) }
   let(:user) { user_post.postable.owner }
-  let(:comment_valid_params) {{
-    post_id: user_post.id,
-    comment: {text: build(:comment).text}
-  }}
+  let(:comment_valid_params) {
+     {
+       post_id: user_post.id,
+       comment: {text: build(:comment).text}
+     }}
 
   describe 'unauthenticated' do
     it 'responds with 401 Unauthorized' do
@@ -47,9 +48,9 @@ RSpec.describe Api::V1::CommentsController, type: :request do
         it 'posts no comment on a post from a stranger' do
           another_user_post = create(:post_in_aspect)
           post "/posts/#{another_user_post.id}/comments",
-                params:  comment_valid_params,
-                headers: api_headers(response.headers)
-          expect(response.code).to eq("404")
+               params:  comment_valid_params,
+               headers: api_headers(response.headers)
+          expect(response.code).to eq('404')
           expect(json_response[:error]).to eq('Failed to comment.')
         end
       end

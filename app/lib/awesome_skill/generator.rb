@@ -2,7 +2,6 @@
 
 module AwesomeSkill
   class Generator
-
     def initialize(user, target)
       @user = user
       @target = target
@@ -10,9 +9,7 @@ module AwesomeSkill
 
     def create!(options={})
       relayable = build(options)
-      if relayable.save!
-        relayable
-      end
+      relayable if relayable.save!
     end
 
     def build(options={})
@@ -22,7 +19,7 @@ module AwesomeSkill
     protected
 
     def relayable_options
-      raise NotImplementedError, "You must override relayable_options"
+      raise NotImplementedError, 'You must override relayable_options'
     end
   end
 end

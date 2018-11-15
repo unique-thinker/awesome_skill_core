@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Dislike < Vote
   class Generator < AwesomeSkill::Generator
     def self.federated_class
@@ -5,7 +7,7 @@ class Dislike < Vote
     end
 
     def relayable_options
-      {:target => @target, :positive => false}
+      {target: @target, positive: false}
     end
   end
 end
