@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2018_11_01_045337) do
+ActiveRecord::Schema.define(version: 2018_11_15_061544) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -142,9 +142,25 @@ ActiveRecord::Schema.define(version: 2018_11_01_045337) do
     t.index ["username"], name: "index_users_on_username", unique: true
   end
 
+  create_table "votes", force: :cascade do |t|
+    t.boolean "positive"
+    t.string "guid"
+    t.bigint "author_id", null: false
+    t.string "target_type"
+    t.bigint "target_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["author_id"], name: "index_votes_on_person_id"
+    t.index ["guid"], name: "index_votes_on_guid", unique: true
+    t.index ["target_id", "author_id", "target_type"], name: "index_votes_on_target_id_and_author_id_and_target_type", unique: true
+    t.index ["target_id"], name: "index_votes_on_post_id"
+    t.index ["target_type", "target_id"], name: "index_votes_on_target_type_and_target_id"
+  end
+
   add_foreign_key "aspect_visibilities", "aspects", on_delete: :cascade
   add_foreign_key "aspects", "users"
   add_foreign_key "comments", "people", column: "author_id", name: "comments_author_id_fk", on_delete: :cascade
   add_foreign_key "people", "users", column: "owner_id"
   add_foreign_key "profiles", "people", on_delete: :cascade
+  add_foreign_key "votes", "people", column: "author_id", name: "votes_author_id_fk", on_delete: :cascade
 end
