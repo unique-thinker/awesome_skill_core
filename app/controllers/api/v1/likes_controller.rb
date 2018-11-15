@@ -17,7 +17,7 @@ class Api::V1::LikesController < Api::BaseController
 
     if like
       options = {include: [:author]}
-      render json: LikeSerializer.new(like, options), status: :created
+      render json: Api::V1::VoteSerializer.new(like, options), status: :created
     else
       render json: {success: false, error: 'Failed to like.'}, status: :unprocessable_entity
     end
