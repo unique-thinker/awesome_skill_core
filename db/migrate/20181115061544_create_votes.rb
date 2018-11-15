@@ -5,6 +5,7 @@ class CreateVotes < ActiveRecord::Migration[5.2]
     create_table :votes do |t|
       t.boolean :positive
       t.string :guid, index: {unique: true, name: :index_votes_on_guid}
+      t.string :type
       t.references :author,
                    references:  :people,
                    foreign_key: {to_table: :people, name: :votes_author_id_fk, on_delete: :cascade},

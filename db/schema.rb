@@ -145,6 +145,7 @@ ActiveRecord::Schema.define(version: 2018_11_15_061544) do
   create_table "votes", force: :cascade do |t|
     t.boolean "positive"
     t.string "guid"
+    t.string "type"
     t.bigint "author_id", null: false
     t.string "target_type"
     t.bigint "target_id"
