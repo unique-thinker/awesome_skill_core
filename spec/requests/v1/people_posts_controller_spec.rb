@@ -129,7 +129,7 @@ RSpec.describe Api::V1::PeoplePostsController, type: :request do
       end
     end
 
-    describe 'POST /people/:person_id/' do
+    describe 'DELETE /people/:person_id/:id' do
       before do
         people_post.save
       end
