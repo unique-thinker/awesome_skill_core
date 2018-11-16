@@ -11,6 +11,12 @@ module PostConcern
     end
   end
 
+  def destroy_post!(post_id)
+    post = find_post!(post_id)
+    raise AwesomeSkill::NotMine unless post.postable == current_user.person
+    post.destroy!
+  end
+
   private
 
   def find_public!(id_or_guid)

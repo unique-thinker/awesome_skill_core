@@ -2,6 +2,7 @@
 
 class Api::V1::PeoplePostsController < Api::BaseController
   include Response
+  include PostConcern
 
   before_action :authenticate_user!
 
@@ -24,6 +25,16 @@ class Api::V1::PeoplePostsController < Api::BaseController
            status: :unprocessable_entity
   rescue StandardError => error
     handle_create_error(error)
+  end
+
+  def destroy
+    begin
+      destroy_post!(params[:id])
+    rescue ActiveRecord::RecordNotFound
+      render json: {success: false, error: 'Failed to destroy post.'}, status: :not_found
+      return
+    end
+    render json: {}, status: :no_content
   end
 
   def handle_create_error(error)
