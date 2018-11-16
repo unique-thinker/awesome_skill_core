@@ -9,6 +9,7 @@ class Post < ApplicationRecord
   # Validations
   validates :text, length: {maximum: 65_535}
   validate :presence_of_content, on: :create
+  alias_attribute :author, :postable
 
   def self.params_initialize(params)
     new(params.to_hash.stringify_keys.slice(*column_names))

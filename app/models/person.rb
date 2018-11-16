@@ -27,4 +27,8 @@ class Person < ApplicationRecord
     super
     self.profile ||= Profile.new unless profile_set
   end
+
+  def owns?(obj)
+    self.id == obj.author.id
+  end
 end

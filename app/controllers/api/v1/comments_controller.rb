@@ -26,6 +26,21 @@ class Api::V1::CommentsController < Api::BaseController
     end
   end
 
+  def destroy
+    begin
+      comment = Comment.find(params[:id])
+    rescue ActiveRecord::RecordNotFound
+      render json: {success: false, error: 'Failed to destroy comment.'}, status: :not_found
+      return
+    end
+    if current_user.owns?(comment) || current_user.owns?(comment.parent)
+      comment.destroy!
+      render json: {}, status: :no_content
+    else
+      render json: {}, status: :forbidden
+    end
+  end
+
   def comment_params
     params.permit(:post_id, comment: %i[text])
   end
