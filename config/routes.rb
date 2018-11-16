@@ -14,10 +14,10 @@ Rails.application.routes.draw do
 
     scope module: :v1, constraints: ApiVersionConstraint.new('v1', false) do
       resource :profile, only: %i[edit update]
-      resources :people, only: %(show) do
-        resources :people_posts, only: %(create)
+      resources :people, only: %i[show] do
+        resources :people_posts, only: %i[create destroy]
       end
-      resources :posts, only: %i[show destroy] do
+      resources :posts, only: %i[show] do
         resources :comments, only: %i[create destroy]
         resources :likes, only: %i[create destroy]
         resources :dislikes, only: %i[create destroy]
