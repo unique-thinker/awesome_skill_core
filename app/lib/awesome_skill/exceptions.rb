@@ -8,5 +8,10 @@ module AwesomeSkill
 
   class NotImplementedError < AwesomeSkillError; end
 
+  # the post in question is not public, and that is somehow a problem
   class NonPublic < AwesomeSkillError; end
+
+  # something that should be accessed does not belong to the current user and
+  # that prevents further execution
+  class NotMine < AwesomeSkillError; end
 end
