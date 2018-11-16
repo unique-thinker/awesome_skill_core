@@ -5,8 +5,9 @@ require 'rails_helper'
 RSpec.describe Api::V1::PeoplePostsController, type: :request do
   # URL
   let(:create_post_path) { "/people/#{person.id}/people_posts" }
+  let(:destroy_post_path) { "/people/#{person.id}/people_posts/#{people_post.id}" }
 
-  let!(:user) { create(:user_with_aspects) }
+  let(:user) { people_post.postable.owner}
   let(:person) { user.person }
   let(:aspect_1) { user.aspects.first }
   let(:aspect_2) { user.aspects.build(name: 'my apsect') }
@@ -27,11 +28,12 @@ RSpec.describe Api::V1::PeoplePostsController, type: :request do
   end
 
   describe 'authenticated' do
-    before do
-      login(user)
-    end
 
     describe 'POST /people/:person_id/people_posts' do
+      before do
+        login(user)
+      end
+
       context 'with valid params' do
         it 'create a post' do
           post create_post_path,
@@ -123,6 +125,37 @@ RSpec.describe Api::V1::PeoplePostsController, type: :request do
                params:  post_valid_params,
                headers: api_headers(response.headers)
           expect(response.status).to eq(201)
+        end
+      end
+    end
+
+    describe 'POST /people/:person_id/' do
+      before do
+        people_post.save
+      end
+
+      context 'own post' do
+        before do
+          login(user)
+        end
+
+        it 'destroy post when it is your post' do
+          delete destroy_post_path,
+               params: {id: people_post.id},
+               headers: api_headers(response.headers)
+          expect(response.status).to eq(204)
+        end
+      end
+
+      context 'post of another user' do
+        it 'will response 404' do
+          @user = create(:user_with_aspects)
+          login(@user)
+
+          delete destroy_post_path,
+               params: {id: people_post.id},
+               headers: api_headers(response.headers)
+          expect(response.status).to eq(404)
         end
       end
     end
