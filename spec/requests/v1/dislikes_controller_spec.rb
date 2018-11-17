@@ -5,9 +5,12 @@ require 'rails_helper'
 RSpec.describe Api::V1::DislikesController, type: :request do
   # URL
   let(:create_dislike_path) { "/posts/#{user_post.id}/dislikes" }
+  let(:destroy_dislike_path) { "/posts/#{user_post.id}/dislikes/#{dislike.id}" }
 
-  let!(:user_post) { create(:post_in_aspect) }
-  let(:user) { user_post.postable.owner }
+  let(:dislike) { build(:dislike) }
+  let!(:user_post) { dislike.parent }
+  let(:user) { user_post.author.owner }
+  let(:another_user) { create(:user) }
   let(:dislike_valid_params) { {post_id: user_post.id} }
 
   describe 'unauthenticated' do
@@ -18,13 +21,21 @@ RSpec.describe Api::V1::DislikesController, type: :request do
   end
 
   describe 'authenticated' do
-    before do
-      login(user)
-    end
-
     describe 'POST /posts/:post_id/dislikes' do
+      before do
+        login(user)
+      end
+
       context 'with valid params' do
         it 'dislike a post' do
+          post create_dislike_path,
+               params:  dislike_valid_params,
+               headers: api_headers(response.headers)
+          expect(response.status).to eq(201)
+        end
+
+        it 'dislike a like post and destroy like' do
+          like = user.like!(user_post)
           post create_dislike_path,
                params:  dislike_valid_params,
                headers: api_headers(response.headers)
@@ -41,6 +52,31 @@ RSpec.describe Api::V1::DislikesController, type: :request do
           expect(user).not_to receive(:dislike!)
           expect(response.status).to eq(404)
         end
+      end
+    end
+
+    describe 'DELETE /posts/:post_id/dislikes/:id' do
+      before do
+        dislike.save
+        login(user)
+      end
+
+      it 'lets a user destroy their dislike' do
+        delete destroy_dislike_path,
+             params:  dislike_valid_params.merge(id: dislike.id),
+             headers: api_headers(response.headers)
+        expect(response.status).to eq(204)
+      end
+
+      it 'does not let a user destroy other dislikes' do
+        dislike_2 = another_user.dislike!(user_post)
+        dislike_count = Dislike.count
+
+        delete "/posts/#{user_post.id}/dislikes/#{dislike_2.id}",
+          params: dislike_valid_params.merge(id: dislike_2.id),
+          headers: api_headers(response.headers)
+        expect(response.status).to eq(403)
+        expect(Dislike.count).to eq(dislike_count)
       end
     end
   end
