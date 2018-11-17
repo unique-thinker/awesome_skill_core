@@ -2,6 +2,7 @@
 
 class Post < ApplicationRecord
   include Shareable
+  include Fields::Votable
   # Association
   belongs_to :postable, polymorphic: true
   has_many :pictures, as: :imageable, dependent: :destroy
