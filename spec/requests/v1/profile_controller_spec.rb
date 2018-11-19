@@ -3,7 +3,7 @@
 require 'rails_helper'
 
 RSpec.describe Api::V1::ProfilesController, type: :request do
-  #URL
+  # URL
   let(:edit_profile_path) { '/profile/edit' }
   let(:update_profile_path) { '/profile' }
   let(:update_profile_pic_path) { '/profile/update_picture' }
@@ -11,11 +11,12 @@ RSpec.describe Api::V1::ProfilesController, type: :request do
   # create test user
   let!(:user) { create(:user) }
   let(:valid_profile_params) { build(:profile).attributes.except('id', 'person_id', 'created_at', 'updated_at') }
-  let(:updated_profile_pic_params) {{
-    image_file: Rack::Test::UploadedFile.new(
-      Rails.root.join('spec', 'fixtures', 'picture.png').to_s, 'image/png'
-    )
-  }}
+  let(:updated_profile_pic_params) {
+     {
+       image_file: Rack::Test::UploadedFile.new(
+         Rails.root.join('spec', 'fixtures', 'picture.png').to_s, 'image/png'
+       )
+     }}
   let(:invalid_profile_params) {
      {
        first_name:    'a' * 40,
@@ -112,7 +113,9 @@ RSpec.describe Api::V1::ProfilesController, type: :request do
       context 'with valid params' do
         before do
           login(user)
-          patch update_profile_pic_path, params: {profile: updated_profile_pic_params}, headers: api_headers(response.headers)
+          patch update_profile_pic_path,
+                params:  {profile: updated_profile_pic_params},
+                headers: api_headers(response.headers)
         end
 
         it 'succeeds' do

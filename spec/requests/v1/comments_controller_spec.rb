@@ -71,16 +71,16 @@ RSpec.describe Api::V1::CommentsController, type: :request do
 
         it 'lets the user delete their comment' do
           delete destroy_comment_path,
-            params: {id: comment.id},
-            headers: api_headers(response.headers)
+                 params:  {id: comment.id},
+                 headers: api_headers(response.headers)
           expect(response.status).to eq(204)
         end
 
         it 'lets the user destroy other people\'s comments' do
           comment = another_user.comment!(user_post, 'hey')
           delete "/posts/#{user_post.id}/comments/#{comment.id}",
-            params: {id: comment.id},
-            headers: api_headers(response.headers)
+                 params:  {id: comment.id},
+                 headers: api_headers(response.headers)
           expect(response.status).to eq(204)
         end
       end
@@ -93,24 +93,24 @@ RSpec.describe Api::V1::CommentsController, type: :request do
         it 'lets the user delete their comment' do
           comment = another_user.comment!(user_post, 'hey')
           delete "/posts/#{user_post.id}/comments/#{comment.id}",
-            params: {id: comment.id},
-            headers: api_headers(response.headers)
+                 params:  {id: comment.id},
+                 headers: api_headers(response.headers)
           expect(response.status).to eq(204)
         end
 
         it 'does not let the user destroy comments they do not own' do
           @comment = another_user.comment!(user_post, 'hey')
           delete destroy_comment_path,
-            params: {id: comment.id},
-            headers: api_headers(response.headers)
+                 params:  {id: comment.id},
+                 headers: api_headers(response.headers)
           expect(response.status).to eq(403)
         end
 
         it 'return 404 on nonexistent comment' do
           nonexistent_comment_id = 404_404
-          delete "/posts/#{user_post.id}/comments/#{nonexistent_comment_id }",
-            params: { id: nonexistent_comment_id },
-            headers: api_headers(response.headers)
+          delete "/posts/#{user_post.id}/comments/#{nonexistent_comment_id}",
+                 params:  {id: nonexistent_comment_id},
+                 headers: api_headers(response.headers)
           expect(response.status).to eq(404)
         end
       end

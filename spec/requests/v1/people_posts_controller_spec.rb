@@ -7,7 +7,7 @@ RSpec.describe Api::V1::PeoplePostsController, type: :request do
   let(:create_post_path) { "/people/#{person.id}/people_posts" }
   let(:destroy_post_path) { "/people/#{person.id}/people_posts/#{people_post.id}" }
 
-  let(:user) { people_post.postable.owner}
+  let(:user) { people_post.postable.owner }
   let(:person) { user.person }
   let(:aspect_1) { user.aspects.first }
   let(:aspect_2) { user.aspects.build(name: 'my apsect') }
@@ -28,7 +28,6 @@ RSpec.describe Api::V1::PeoplePostsController, type: :request do
   end
 
   describe 'authenticated' do
-
     describe 'POST /people/:person_id/people_posts' do
       before do
         login(user)
@@ -140,8 +139,8 @@ RSpec.describe Api::V1::PeoplePostsController, type: :request do
 
         it 'destroy post when it is your post' do
           delete destroy_post_path,
-               params: {id: people_post.id},
-               headers: api_headers(response.headers)
+                 params:  {id: people_post.id},
+                 headers: api_headers(response.headers)
           expect(response.status).to eq(204)
         end
       end
@@ -152,8 +151,8 @@ RSpec.describe Api::V1::PeoplePostsController, type: :request do
           login(@user)
 
           delete destroy_post_path,
-               params: {id: people_post.id},
-               headers: api_headers(response.headers)
+                 params:  {id: people_post.id},
+                 headers: api_headers(response.headers)
           expect(response.status).to eq(404)
         end
       end

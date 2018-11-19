@@ -22,7 +22,7 @@ class User < ApplicationRecord
 
   has_many :aspects, dependent: :destroy
 
-  #Delegates
+  # Delegates
   delegate :owns?, to: :person
 
   def strip_and_downcase_username

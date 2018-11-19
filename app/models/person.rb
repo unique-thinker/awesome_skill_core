@@ -29,6 +29,6 @@ class Person < ApplicationRecord
   end
 
   def owns?(obj)
-    self.id == obj.author.id
+    id == obj.author.id
   end
 end

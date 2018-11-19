@@ -35,7 +35,7 @@ RSpec.describe Api::V1::LikesController, type: :request do
         end
 
         it 'like a dislike post and destroy dislike' do
-          dislike = user.dislike!(user_post)
+          user.dislike!(user_post)
           post create_like_path,
                params:  like_valid_params,
                headers: api_headers(response.headers)
@@ -63,18 +63,18 @@ RSpec.describe Api::V1::LikesController, type: :request do
 
       it 'lets a user destroy their like' do
         delete destroy_like_path,
-             params:  like_valid_params.merge(id: like.id),
-             headers: api_headers(response.headers)
+               params:  like_valid_params.merge(id: like.id),
+               headers: api_headers(response.headers)
         expect(response.status).to eq(204)
       end
 
       it 'does not let a user destroy other likes' do
-        like_2 = another_user.like!(user_post)
+        like2 = another_user.like!(user_post)
         like_count = Like.count
 
-        delete "/posts/#{user_post.id}/likes/#{like_2.id}",
-          params: like_valid_params.merge(id: like_2.id),
-          headers: api_headers(response.headers)
+        delete "/posts/#{user_post.id}/likes/#{like2.id}",
+               params:  like_valid_params.merge(id: like2.id),
+               headers: api_headers(response.headers)
         expect(response.status).to eq(403)
         expect(Like.count).to eq(like_count)
       end
