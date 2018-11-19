@@ -3,11 +3,19 @@
 require 'rails_helper'
 
 RSpec.describe Api::V1::ProfilesController, type: :request do
-  # create test user
-  let!(:user) { create(:user) }
+  #URL
   let(:edit_profile_path) { '/profile/edit' }
   let(:update_profile_path) { '/profile' }
+  let(:update_profile_pic_path) { '/profile/update_picture' }
+
+  # create test user
+  let!(:user) { create(:user) }
   let(:valid_profile_params) { build(:profile).attributes.except('id', 'person_id', 'created_at', 'updated_at') }
+  let(:updated_profile_pic_params) {{
+    image_file: Rack::Test::UploadedFile.new(
+      Rails.root.join('spec', 'fixtures', 'picture.png').to_s, 'image/png'
+    )
+  }}
   let(:invalid_profile_params) {
      {
        first_name:    'a' * 40,
@@ -96,6 +104,20 @@ RSpec.describe Api::V1::ProfilesController, type: :request do
           body = json_response
           expect(body[:success]).to eq false
           expect(body.keys).to match_array(%i[success errors])
+        end
+      end
+    end
+
+    describe 'PATCH /profile/update_picture' do
+      context 'with valid params' do
+        before do
+          login(user)
+          patch update_profile_pic_path, params: {profile: updated_profile_pic_params}, headers: api_headers(response.headers)
+        end
+
+        it 'succeeds' do
+          expect(response).to have_http_status(:no_content)
+          expect(Picture.count).to eq 1
         end
       end
     end
