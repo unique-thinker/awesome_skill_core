@@ -22,6 +22,18 @@ class Api::V1::ProfilesController < Api::BaseController
     end
   end
 
+  def update_picture
+    profile = current_user.person.profile
+    @profile_picture = profile_picture_params.merge!(user: current_user, public: true)
+    pic = PictureCreationService.call(@profile_picture)
+    profile.picture = pic
+    if profile.save
+      head :no_content
+    else
+      render json: {success: false, errors: resource_errors(profile)}, status: :unprocessable_entity
+    end
+  end
+
   private
 
   def profile_params
@@ -31,5 +43,9 @@ class Api::V1::ProfilesController < Api::BaseController
       :company, :current_place, :native_place,
       :state, :country
     )
+  end
+
+  def profile_picture_params
+    params.require(:profile).permit(:image_file)
   end
 end

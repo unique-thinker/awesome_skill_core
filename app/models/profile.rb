@@ -6,6 +6,7 @@ class Profile < ApplicationRecord
 
   # Association
   belongs_to :person
+  has_one :picture, as: :imageable, dependent: :destroy
 
   # Validations
   validates :first_name, :last_name, length: {maximum: 32},
