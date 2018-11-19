@@ -68,8 +68,6 @@ ActiveRecord::Schema.define(version: 2018_11_15_061544) do
     t.string "remote_image_name"
     t.string "random_string"
     t.string "processed_image"
-    t.integer "height"
-    t.integer "width"
     t.string "imageable_type"
     t.bigint "imageable_id"
     t.datetime "created_at", null: false

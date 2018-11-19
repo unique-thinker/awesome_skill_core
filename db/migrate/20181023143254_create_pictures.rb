@@ -10,8 +10,6 @@ class CreatePictures < ActiveRecord::Migration[5.2]
       t.string   :remote_image_name
       t.string   :random_string
       t.string   :processed_image
-      t.integer  :height
-      t.integer  :width
       t.references :imageable, polymorphic: true, index: true
 
       t.timestamps
