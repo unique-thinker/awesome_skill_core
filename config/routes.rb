@@ -13,7 +13,11 @@ Rails.application.routes.draw do
     }, skip: [:omniauth_callbacks]
 
     scope module: :v1, constraints: ApiVersionConstraint.new('v1', false) do
-      resource :profile, only: %i[edit update]
+      resource :profile, only: %i[edit update] do
+        member do
+          patch 'update_picture'
+        end
+      end
       resources :people, only: %i[show] do
         resources :people_posts, only: %i[create destroy]
       end
