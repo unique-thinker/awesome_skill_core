@@ -113,16 +113,15 @@ RSpec.describe Api::V1::PeoplePostsController, type: :request do
 
       context 'with pictures' do
         before do
-          image_files = [Rack::Test::UploadedFile.new(
+          @image_files = [Rack::Test::UploadedFile.new(
             Rails.root.join('spec', 'fixtures', 'picture.png').to_s, 'image/png'
           )]
-          post_valid_params.merge(image_file: image_files)
         end
 
         it 'will post a picture without text' do
           post_valid_params.delete :text
           post create_post_path,
-               params:  post_valid_params,
+               params:  post_valid_params.merge(image_files: @image_files),
                headers: api_headers(response.headers)
           expect(response.status).to eq(201)
         end
