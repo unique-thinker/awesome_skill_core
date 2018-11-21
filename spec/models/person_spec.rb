@@ -13,7 +13,8 @@ RSpec.describe Person, type: :model do
   it { should validate_presence_of(:profile) }
   it { should belong_to(:owner) }
   it { should have_one(:profile) }
-  it { should have_many(:posts) }
+  it { should have_many(:posts).dependent(:destroy) }
+  it { should have_many(:friendships).dependent(:destroy) }
 
   it 'always has a profile' do
     expect(Person.new.profile).not_to be_nil
