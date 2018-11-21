@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2018_11_15_061544) do
+ActiveRecord::Schema.define(version: 2018_11_21_064814) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -47,6 +47,17 @@ ActiveRecord::Schema.define(version: 2018_11_15_061544) do
     t.index ["author_id"], name: "index_comments_on_person_id"
     t.index ["commentable_type", "commentable_id"], name: "index_comments_on_commentable_id_and_commentable_type"
     t.index ["guid"], name: "index_comments_on_guid", unique: true
+  end
+
+  create_table "friendships", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.bigint "friend_id", null: false
+    t.boolean "confirmed", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["friend_id"], name: "index_friendships_on_friend_id"
+    t.index ["user_id", "friend_id"], name: "index_friendships_on_user_id_and_friend_d", unique: true
+    t.index ["user_id"], name: "index_friendships_on_user_id"
   end
 
   create_table "people", force: :cascade do |t|
@@ -159,6 +170,8 @@ ActiveRecord::Schema.define(version: 2018_11_15_061544) do
   add_foreign_key "aspect_visibilities", "aspects", on_delete: :cascade
   add_foreign_key "aspects", "users"
   add_foreign_key "comments", "people", column: "author_id", name: "comments_author_id_fk", on_delete: :cascade
+  add_foreign_key "friendships", "people", column: "friend_id", name: "friendships_friend_id_fk", on_delete: :cascade
+  add_foreign_key "friendships", "users"
   add_foreign_key "people", "users", column: "owner_id"
   add_foreign_key "profiles", "people", on_delete: :cascade
   add_foreign_key "votes", "people", column: "author_id", name: "votes_author_id_fk", on_delete: :cascade
