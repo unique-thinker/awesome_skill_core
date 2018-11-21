@@ -12,6 +12,7 @@ class Person < ApplicationRecord
   has_one :profile, dependent: :destroy
   accepts_nested_attributes_for :profile
   has_many :posts, as: :postable, dependent: :destroy
+  has_many :friendships, foreign_key: :friend_id, dependent: :destroy
 
   # Set a default of an empty profile when a new Person record is instantiated.
   # Passing :profile => nil to Person.new will instantiate a person with no profile.

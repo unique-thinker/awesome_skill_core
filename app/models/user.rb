@@ -21,6 +21,8 @@ class User < ApplicationRecord
   has_one :person, inverse_of: :owner, foreign_key: :owner_id, dependent: :destroy
 
   has_many :aspects, dependent: :destroy
+  has_many :friendships
+  has_many :friends, through: :friendships, source: :friend
 
   # Delegates
   delegate :owns?, to: :person
