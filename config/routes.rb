@@ -18,9 +18,13 @@ Rails.application.routes.draw do
           patch 'update_picture'
         end
       end
+
       resources :people, only: %i[show] do
         resources :people_posts, only: %i[create destroy]
       end
+
+      resources :friendships, only: %i[create update destroy]
+
       resources :posts, only: %i[show] do
         resources :comments, only: %i[create destroy]
         resources :likes, only: %i[create destroy]
