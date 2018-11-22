@@ -13,6 +13,7 @@ class Api::V1::FriendshipsController < Api::BaseController
 
   def create
     return render json: {success: false, error: 'Failed to send friend request.'}, status: :not_found if @not_found
+
     if current_user.send_friend_request(@friend)
       render json: {}, status: :created
     else
@@ -22,6 +23,7 @@ class Api::V1::FriendshipsController < Api::BaseController
 
   def update
     return render json: {success: false, error: 'Failed to accept friend request.'}, status: :not_found if @not_found
+
     if current_user.accept_friend_request(@friend)
       render json: {}, status: :no_content
     else
@@ -31,6 +33,7 @@ class Api::V1::FriendshipsController < Api::BaseController
 
   def destroy
     return render json: {success: false, error: 'Failed to unfriend.'}, status: :not_found if @not_found
+
     if current_user.unfriend(@friend)
       render json: {}, status: :no_content
     else
@@ -40,7 +43,7 @@ class Api::V1::FriendshipsController < Api::BaseController
 
   def find_friend
     @friend = Person.find(params[:id])
-    rescue ActiveRecord::RecordNotFound => e
-      @not_found = e
+  rescue ActiveRecord::RecordNotFound => e
+    @not_found = e
   end
 end
