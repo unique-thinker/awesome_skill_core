@@ -74,4 +74,19 @@ class User < ApplicationRecord
       aspect << post
     end
   end
+
+  ######### Friend Request #########
+  def send_friend_request(friend)
+    friendships.create(friend: friend, confirmed: false)
+  end
+
+  def accept_friend_request(friend)
+    friend_request = friend.owner.friendships.find_by(friend: person, confirmed: false)
+    friend_request&.update(confirmed: true) && friendships.create(friend: friend, confirmed: true)
+  end
+
+  def unfriend(friend)
+    friendship = Friendship.where(user: [self, friend.owner], friend: [friend, person], confirmed: [true, false])
+    !friendship.empty? && friendship.destroy_all
+  end
 end
