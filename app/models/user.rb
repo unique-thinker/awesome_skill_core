@@ -22,7 +22,8 @@ class User < ApplicationRecord
 
   has_many :aspects, dependent: :destroy
   has_many :friendships, inverse_of: :user, dependent: :destroy
-  has_many :friends, through: :friendships, source: :friend
+  has_many :friends, -> { where(friendships: { confirmed: true }) }, through: :friendships, source: :friend
+  has_many :friend_requests, -> { where(friendships: { confirmed: false }) }, through: :friendships, source: :friend
 
   # Delegates
   delegate :owns?, to: :person
@@ -77,12 +78,15 @@ class User < ApplicationRecord
 
   ######### Friend Request #########
   def send_friend_request(friend)
-    friendships.create(friend: friend, confirmed: false)
+    friendships.build(friend: friend, confirmed: false)
+    save
   end
 
   def accept_friend_request(friend)
     friend_request = friend.owner.friendships.find_by(friend: person, confirmed: false)
-    friend_request&.update(confirmed: true) && friendships.create(friend: friend, confirmed: true)
+    transaction do
+      friend_request&.update(confirmed: true) && friendships.build(friend: friend, confirmed: true).save
+    end
   end
 
   def unfriend(friend)

@@ -24,10 +24,10 @@ RSpec.describe Friendship, type: :model do
     end
 
     it 'validates uniqueness' do
-      friendship1 = user.friendships.create(friend: user.person, confirmed: true)
+      friendship1 = user.friendships.build(friend: person, confirmed: true)
       expect(friendship1).to be_valid
 
-      friendship2 = user.friendships.create(friend: user.person, confirmed: true)
+      friendship2 = user.friendships.build(friend: user.person, confirmed: true)
       expect(friendship2).not_to be_valid
     end
   end
