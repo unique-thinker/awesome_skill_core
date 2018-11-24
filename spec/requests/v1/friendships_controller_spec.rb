@@ -4,14 +4,16 @@ require 'rails_helper'
 
 RSpec.describe Api::V1::FriendshipsController, type: :request do
   # URL
+  let(:friend_request_path)   { '/friendships' }
   let(:send_friend_request_path)   { '/friendships' }
   let(:accept_friend_request_path) { "/friendships/#{user2.person.id}" }
   let(:cancel_friend_request_path) { "/friendships/#{user2.person.id}" }
 
   let(:user1) { create(:user) }
   let(:user2) { create(:user) }
-  let(:user1_friends) { create_list(:friendship, 5, user: user1) }
-  let(:friend_request) { build(:friendship, user: user2, friend: user1.person, confirmed: false) }
+  let(:user1_friends) { create_list(:friendship, 5, user: user1, confirmed: true) }
+  let(:user1_send_friend_request) { build(:friendship, user: user1, friend: user2.person, confirmed: false) }
+  let(:user2_send_friend_request) { build(:friendship, user: user2, friend: user1.person, confirmed: false) }
   let(:friendship_params) { {id: user2.person.id} }
 
   describe 'unauthenticated' do
@@ -32,6 +34,20 @@ RSpec.describe Api::V1::FriendshipsController, type: :request do
   describe 'authenticated' do
     before do
       login(user1)
+    end
+
+    describe 'GET /friendships' do
+
+      it 'return incoming friend requests and send friend requests' do
+        user1_friends
+        user1_send_friend_request.save
+        user2_send_friend_request.save
+        get friend_request_path, headers: api_headers(response.headers)
+        expect(response.status).to eq(200)
+        data = json_response[:data]
+        expect(data[:friend_request][0][:relationships][:friend][:data][:id]).to eq (user2.person.id.to_s)
+        expect(data[:send_friend_request][0][:relationships][:friend][:data][:id]).to eq (user2.person.id.to_s)
+      end
     end
 
     describe 'POST /friendships' do
@@ -71,7 +87,7 @@ RSpec.describe Api::V1::FriendshipsController, type: :request do
       end
 
       it 'shouldn’t be able to send friend requests, if they’re already send friend request' do
-        friend_request.save
+        user2_send_friend_request.save
         patch accept_friend_request_path,
               params:  friendship_params,
               headers: api_headers(response.headers)
@@ -85,7 +101,7 @@ RSpec.describe Api::V1::FriendshipsController, type: :request do
 
     describe 'PATCH /friendships/:id' do
       it 'accept a friend request' do
-        friend_request.save
+        user2_send_friend_request.save
         patch accept_friend_request_path,
               params:  friendship_params,
               headers: api_headers(response.headers)
@@ -103,7 +119,7 @@ RSpec.describe Api::V1::FriendshipsController, type: :request do
       end
 
       it 'shouldn’t be able to accept friend requests, if they’re already friends' do
-        friend_request.save
+        user2_send_friend_request.save
         patch accept_friend_request_path,
               params:  friendship_params,
               headers: api_headers(response.headers)
@@ -126,7 +142,7 @@ RSpec.describe Api::V1::FriendshipsController, type: :request do
       end
 
       it 'cancel a coming friend request' do
-        friend_request.save
+        user2_send_friend_request.save
         delete accept_friend_request_path,
                params:  friendship_params,
                headers: api_headers(response.headers)
@@ -135,7 +151,7 @@ RSpec.describe Api::V1::FriendshipsController, type: :request do
       end
 
       it 'unfriend a friend' do
-        friend_request.save
+        user2_send_friend_request.save
         patch accept_friend_request_path,
               params:  friendship_params,
               headers: api_headers(response.headers)
@@ -148,28 +164,28 @@ RSpec.describe Api::V1::FriendshipsController, type: :request do
 
       it 'should not unfriend other friends' do
         user1_friends
-        friend_request.save
+        user2_send_friend_request.save
+        friend_count = user1.friends.count
         patch accept_friend_request_path,
               params:  friendship_params,
               headers: api_headers(response.headers)
-        friend_count = Friendship.count
         delete accept_friend_request_path,
                params:  friendship_params,
                headers: api_headers(response.headers)
         expect(response.status).to eq(204)
-        expect(Friendship.count).to eq friend_count - 2
+        expect(Friendship.where(user: user1, confirmed: true).count).to eq friend_count
       end
 
       it 'should return error' do
         user1_friends
-        friend_request.save
-        friend_count = Friendship.count
+        user2_send_friend_request.save
+        friend_count = user1.friends.count
         user3 = create(:user)
         delete "/friendships/#{user3.person.id}",
                params:  {id: user3.person.id},
                headers: api_headers(response.headers)
         expect(response.status).to eq(422)
-        expect(Friendship.count).to eq friend_count
+        expect(Friendship.where(user: user1, confirmed: true).count).to eq friend_count
       end
     end
   end
