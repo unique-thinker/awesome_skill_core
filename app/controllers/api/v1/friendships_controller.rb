@@ -8,7 +8,12 @@ class Api::V1::FriendshipsController < Api::BaseController
 
   def index
     @incoming = Friendship.where(friend: current_user.person, confirmed: false)
-    @outgoing = current_user.friendships.where(confirmed: false)
+    @outgoing = Friendship.where(user: current_user, confirmed: false)
+    requests = {data: {}}
+    options = {params: {current_user: current_user}, include: [:friend]}
+    requests[:data][:friend_request] = Api::V1::FriendRequestSerializer.new(@incoming, options).serializable_hash[:data]
+    requests[:data][:send_friend_request] = Api::V1::FriendRequestSerializer.new(@outgoing, options).serializable_hash[:data]
+    render json: requests, status: :ok
   end
 
   def create
