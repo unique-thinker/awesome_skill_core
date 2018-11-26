@@ -27,7 +27,7 @@ class User < ApplicationRecord
   has_many :friend_requests, -> { where(friendships: { confirmed: false }) }, through: :friendships, source: :friend
 
   # Delegates
-  delegate :owns?, to: :person
+  delegate :owns?, :follow, :unfollow, to: :person
 
   def strip_and_downcase_username
     return if username.blank?

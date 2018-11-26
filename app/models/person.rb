@@ -38,4 +38,13 @@ class Person < ApplicationRecord
   def owns?(obj)
     id == obj.author.id
   end
+
+  def follow(following_person)
+    following_relationships.build(following: following_person)
+    save
+  end
+
+  def unfollow(following_person)
+    following_relationships.find_by(following: following_person)&.destroy
+  end
 end
