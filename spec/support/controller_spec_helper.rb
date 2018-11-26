@@ -7,4 +7,8 @@ module ControllerSpecHelper
       password: user.password
     }.to_json, headers: headers
   end
+
+  def guid
+    UUID.generate(:compact)
+  end
 end
