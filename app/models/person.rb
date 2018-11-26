@@ -14,6 +14,12 @@ class Person < ApplicationRecord
   has_many :posts, as: :postable, dependent: :destroy
   has_many :friendships, foreign_key: :friend_id, dependent: :destroy, inverse_of: :friend
 
+  has_many :follower_relationships, foreign_key: :following_id, class_name: 'Follow', inverse_of: :following
+  has_many :following_relationships, foreign_key: :follower_id, class_name: 'Follow', inverse_of: :follower
+
+  has_many :followers, through: :follower_relationships, source: :follower
+  has_many :following, through: :following_relationships, source: :following
+
   # Set a default of an empty profile when a new Person record is instantiated.
   # Passing :profile => nil to Person.new will instantiate a person with no profile.
   # Calling Person.new with a block:

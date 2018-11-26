@@ -21,6 +21,7 @@ class User < ApplicationRecord
   has_one :person, inverse_of: :owner, foreign_key: :owner_id, dependent: :destroy
 
   has_many :aspects, dependent: :destroy
+
   has_many :friendships, inverse_of: :user, dependent: :destroy
   has_many :friends, -> { where(friendships: { confirmed: true }) }, through: :friendships, source: :friend
   has_many :friend_requests, -> { where(friendships: { confirmed: false }) }, through: :friendships, source: :friend
