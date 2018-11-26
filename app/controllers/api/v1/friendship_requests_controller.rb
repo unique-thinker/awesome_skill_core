@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class Api::V1::FriendshipsController < Api::BaseController
+class Api::V1::FriendshipRequestsController < Api::BaseController
   include Response
 
   before_action :authenticate_user!
