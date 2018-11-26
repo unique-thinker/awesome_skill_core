@@ -25,6 +25,9 @@ Rails.application.routes.draw do
 
       resources :friendship_requests, only: %i[index create update destroy]
 
+      post '/follow', to: 'relationships#follow', as: :follow
+      delete '/unfollow', to: 'relationships#unfollow', as: :unfollow
+
       resources :posts, only: %i[show] do
         resources :comments, only: %i[create destroy]
         resources :likes, only: %i[create destroy]
