@@ -2,12 +2,12 @@
 
 require 'rails_helper'
 
-RSpec.describe Api::V1::FriendshipsController, type: :request do
+RSpec.describe Api::V1::FriendshipRequestsController, type: :request do
   # URL
-  let(:friend_request_path)   { '/friendships' }
-  let(:send_friend_request_path)   { '/friendships' }
-  let(:accept_friend_request_path) { "/friendships/#{user2.person.id}" }
-  let(:cancel_friend_request_path) { "/friendships/#{user2.person.id}" }
+  let(:friend_request_path)   { '/friendship_requests' }
+  let(:send_friend_request_path)   { '/friendship_requests' }
+  let(:accept_friend_request_path) { "/friendship_requests/#{user2.person.id}" }
+  let(:cancel_friend_request_path) { "/friendship_requests/#{user2.person.id}" }
 
   let(:user1) { create(:user) }
   let(:user2) { create(:user) }
@@ -181,7 +181,7 @@ RSpec.describe Api::V1::FriendshipsController, type: :request do
         user2_send_friend_request.save
         friend_count = user1.friends.count
         user3 = create(:user)
-        delete "/friendships/#{user3.person.id}",
+        delete "/friendship_requests/#{user3.person.id}",
                params:  {id: user3.person.id},
                headers: api_headers(response.headers)
         expect(response.status).to eq(422)
