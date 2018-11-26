@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2018_11_21_064814) do
+ActiveRecord::Schema.define(version: 2018_11_24_095502) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -49,6 +49,16 @@ ActiveRecord::Schema.define(version: 2018_11_21_064814) do
     t.index ["guid"], name: "index_comments_on_guid", unique: true
   end
 
+  create_table "follows", force: :cascade do |t|
+    t.bigint "following_id", null: false
+    t.bigint "follower_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["follower_id"], name: "index_follows_on_follower_id"
+    t.index ["following_id", "follower_id"], name: "index_follows_on_following_id_and_follower_id", unique: true
+    t.index ["following_id"], name: "index_follows_on_following_id"
+  end
+
   create_table "friendships", force: :cascade do |t|
     t.bigint "user_id", null: false
     t.bigint "friend_id", null: false
@@ -56,7 +66,7 @@ ActiveRecord::Schema.define(version: 2018_11_21_064814) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["friend_id"], name: "index_friendships_on_friend_id"
-    t.index ["user_id", "friend_id"], name: "index_friendships_on_user_id_and_friend_d", unique: true
+    t.index ["user_id", "friend_id"], name: "index_friendships_on_user_id_and_friend_id", unique: true
     t.index ["user_id"], name: "index_friendships_on_user_id"
   end
 
@@ -170,6 +180,8 @@ ActiveRecord::Schema.define(version: 2018_11_21_064814) do
   add_foreign_key "aspect_visibilities", "aspects", on_delete: :cascade
   add_foreign_key "aspects", "users"
   add_foreign_key "comments", "people", column: "author_id", name: "comments_author_id_fk", on_delete: :cascade
+  add_foreign_key "follows", "people", column: "follower_id"
+  add_foreign_key "follows", "people", column: "following_id"
   add_foreign_key "friendships", "people", column: "friend_id", name: "friendships_friend_id_fk", on_delete: :cascade
   add_foreign_key "friendships", "users"
   add_foreign_key "people", "users", column: "owner_id"
