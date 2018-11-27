@@ -16,46 +16,50 @@ RSpec.describe Api::V1::FriendshipRequestsController, type: :request do
   let(:user2_send_friend_request) { build(:friendship, user: user2, friend: user1.person, confirmed: false) }
   let(:friendship_params) { {id: user2.person.id} }
 
-  describe 'unauthenticated' do
-    it 'responds with 401 Unauthorized' do
-      post send_friend_request_path, headers: api_headers
-      expect(response).to have_http_status(:unauthorized)
-    end
-    it 'responds with 401 Unauthorized' do
-      patch accept_friend_request_path, headers: api_headers
-      expect(response).to have_http_status(:unauthorized)
-    end
-    it 'responds with 401 Unauthorized' do
-      delete cancel_friend_request_path, headers: api_headers
-      expect(response).to have_http_status(:unauthorized)
-    end
-  end
-
-  describe 'authenticated' do
-    before do
-      login(user1)
+  describe 'GET /friendships' do
+    context 'when unauthenticated' do
+      it 'responds with 401 Unauthorized' do
+        post friend_request_path, headers: api_headers
+        expect(response).to have_http_status(:unauthorized)
+      end
     end
 
-    describe 'GET /friendships' do
+    context 'when authenticated' do
+      before do
+        login(user1)
+      end
 
       it 'return incoming friend requests and send friend requests' do
         user1_friends
         user1_send_friend_request.save
         user2_send_friend_request.save
         get friend_request_path, headers: api_headers(response.headers)
-        expect(response.status).to eq(200)
+        expect(response).to have_http_status(200)
         data = json_response[:data]
         expect(data[:friend_request][0][:relationships][:friend][:data][:id]).to eq (user2.person.id.to_s)
         expect(data[:send_friend_request][0][:relationships][:friend][:data][:id]).to eq (user2.person.id.to_s)
       end
     end
+  end
 
-    describe 'POST /friendships' do
+  describe 'POST /friendships' do
+    context 'when unauthenticated' do
+      it 'responds with 401 Unauthorized' do
+        post send_friend_request_path, headers: api_headers
+        expect(response).to have_http_status(:unauthorized)
+      end
+    end
+
+    context 'when authenticated' do
+      before do
+        login(user1)
+      end
+
       it 'send a friend request with valid params' do
         post send_friend_request_path,
              params: friendship_params,
              headers: api_headers(response.headers)
-        expect(response.status).to eq(201)
+        expect(response).to have_http_status(201)
         expect(Friendship.count).to eq 1
       end
 
@@ -63,7 +67,7 @@ RSpec.describe Api::V1::FriendshipRequestsController, type: :request do
         post send_friend_request_path,
              params: {id: 8_888_888},
              headers: api_headers(response.headers)
-        expect(response.status).to eq(404)
+        expect(response).to have_http_status(404)
         expect(Friendship.count).to eq 0
       end
 
@@ -71,7 +75,7 @@ RSpec.describe Api::V1::FriendshipRequestsController, type: :request do
         post send_friend_request_path,
              params: { id: user1.id },
              headers: api_headers(response.headers)
-        expect(response.status).to eq(422)
+        expect(response).to have_http_status(422)
         expect(Friendship.count).to eq 0
       end
 
@@ -82,7 +86,7 @@ RSpec.describe Api::V1::FriendshipRequestsController, type: :request do
         post send_friend_request_path,
              params: friendship_params,
              headers: api_headers(response.headers)
-        expect(response.status).to eq(422)
+        expect(response).to have_http_status(422)
         expect(Friendship.count).to eq 1
       end
 
@@ -94,18 +98,31 @@ RSpec.describe Api::V1::FriendshipRequestsController, type: :request do
         post send_friend_request_path,
              params: friendship_params,
              headers: api_headers(response.headers)
-        expect(response.status).to eq(422)
+        expect(response).to have_http_status(422)
         expect(Friendship.count).to eq 2
       end
     end
+  end
 
-    describe 'PATCH /friendships/:id' do
+  describe 'PATCH /friendships/:id' do
+    context 'when unauthenticated' do
+      it 'responds with 401 Unauthorized' do
+        patch accept_friend_request_path, headers: api_headers
+        expect(response).to have_http_status(:unauthorized)
+      end
+    end
+
+    context 'when authenticated' do
+      before do
+        login(user1)
+      end
+
       it 'accept a friend request' do
         user2_send_friend_request.save
         patch accept_friend_request_path,
               params:  friendship_params,
               headers: api_headers(response.headers)
-        expect(response.status).to eq(204)
+        expect(response).to have_http_status(204)
         expect(Friendship.where(confirmed: true).count).to eq 2
       end
 
@@ -113,7 +130,7 @@ RSpec.describe Api::V1::FriendshipRequestsController, type: :request do
         patch accept_friend_request_path,
               params:  friendship_params,
               headers: api_headers(response.headers)
-        expect(response.status).to eq(422)
+        expect(response).to have_http_status(422)
         expect(Friendship.count).to eq 0
         expect(Friendship.where(confirmed: true).count).to eq 0
       end
@@ -126,27 +143,40 @@ RSpec.describe Api::V1::FriendshipRequestsController, type: :request do
         patch accept_friend_request_path,
               params:  friendship_params,
               headers: api_headers(response.headers)
-        expect(response.status).to eq(422)
+        expect(response).to have_http_status(422)
         expect(Friendship.where(confirmed: true).count).to eq 2
       end
     end
+  end
 
-    describe 'DELETE /friendships/:id' do
+  describe 'DELETE /friendships/:id' do
+    context 'when unauthenticated' do
+      it 'responds with 401 Unauthorized' do
+        delete cancel_friend_request_path, headers: api_headers
+        expect(response).to have_http_status(:unauthorized)
+      end
+    end
+
+    context 'when authenticated' do
+      before do
+        login(user1)
+      end
+
       it 'cancel a send friend request' do
         create(:friendship, user: user1, friend: user2.person, confirmed: false)
-        delete accept_friend_request_path,
+        delete cancel_friend_request_path,
                params:  friendship_params,
                headers: api_headers(response.headers)
-        expect(response.status).to eq(204)
+        expect(response).to have_http_status(204)
         expect(Friendship.count).to eq 0
       end
 
       it 'cancel a coming friend request' do
         user2_send_friend_request.save
-        delete accept_friend_request_path,
+        delete cancel_friend_request_path,
                params:  friendship_params,
                headers: api_headers(response.headers)
-        expect(response.status).to eq(204)
+        expect(response).to have_http_status(204)
         expect(Friendship.count).to eq 0
       end
 
@@ -155,10 +185,10 @@ RSpec.describe Api::V1::FriendshipRequestsController, type: :request do
         patch accept_friend_request_path,
               params:  friendship_params,
               headers: api_headers(response.headers)
-        delete accept_friend_request_path,
+        delete cancel_friend_request_path,
                params:  friendship_params,
                headers: api_headers(response.headers)
-        expect(response.status).to eq(204)
+        expect(response).to have_http_status(204)
         expect(Friendship.count).to eq 0
       end
 
@@ -169,10 +199,10 @@ RSpec.describe Api::V1::FriendshipRequestsController, type: :request do
         patch accept_friend_request_path,
               params:  friendship_params,
               headers: api_headers(response.headers)
-        delete accept_friend_request_path,
+        delete cancel_friend_request_path,
                params:  friendship_params,
                headers: api_headers(response.headers)
-        expect(response.status).to eq(204)
+        expect(response).to have_http_status(204)
         expect(Friendship.where(user: user1, confirmed: true).count).to eq friend_count
       end
 
@@ -184,7 +214,7 @@ RSpec.describe Api::V1::FriendshipRequestsController, type: :request do
         delete "/friendship_requests/#{user3.person.id}",
                params:  {id: user3.person.id},
                headers: api_headers(response.headers)
-        expect(response.status).to eq(422)
+        expect(response).to have_http_status(422)
         expect(Friendship.where(user: user1, confirmed: true).count).to eq friend_count
       end
     end

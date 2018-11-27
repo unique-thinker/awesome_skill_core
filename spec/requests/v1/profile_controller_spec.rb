@@ -33,15 +33,15 @@ RSpec.describe Api::V1::ProfilesController, type: :request do
        country:       'india'
      }}
 
-  describe 'unauthenticated' do
-    it 'responds with 401 Unauthorized' do
-      get edit_profile_path, headers: api_headers
-      expect(response).to have_http_status(:unauthorized)
+  describe 'GET /profile/edit' do
+    context 'when unauthenticated' do
+      it 'responds with 401 Unauthorized' do
+        get edit_profile_path, headers: api_headers
+        expect(response).to have_http_status(:unauthorized)
+      end
     end
-  end
 
-  describe 'authenticated' do
-    describe 'GET /profile/edit' do
+    context 'when authenticated' do
       before do
         login(user)
         get edit_profile_path, headers: api_headers(response.headers)
@@ -70,11 +70,23 @@ RSpec.describe Api::V1::ProfilesController, type: :request do
                                                              ])
       end
     end
+  end
 
-    describe 'PATCH /profile' do
+  describe 'PATCH /profile' do
+    context 'when unauthenticated' do
+      it 'responds with 401 Unauthorized' do
+        patch update_profile_path, headers: api_headers
+        expect(response).to have_http_status(:unauthorized)
+      end
+    end
+
+    context 'when authenticated' do
+      before do
+        login(user)
+      end
+
       context 'with valid params' do
         before do
-          login(user)
           patch update_profile_path, params: {profile: valid_profile_params}, headers: api_headers(response.headers)
         end
 
@@ -97,9 +109,9 @@ RSpec.describe Api::V1::ProfilesController, type: :request do
 
       context 'with invalid params' do
         before do
-          login(user)
           patch update_profile_path, params: {profile: invalid_profile_params}, headers: api_headers(response.headers)
         end
+
         it 'should return errors' do
           expect(response).to have_http_status(:unprocessable_entity)
           body = json_response
@@ -108,20 +120,27 @@ RSpec.describe Api::V1::ProfilesController, type: :request do
         end
       end
     end
+  end
 
-    describe 'PATCH /profile/update_picture' do
-      context 'with valid params' do
-        before do
-          login(user)
-          patch update_profile_pic_path,
-                params:  {profile: updated_profile_pic_params},
-                headers: api_headers(response.headers)
-        end
+  describe 'PATCH /profile/update_picture' do
+    context 'when unauthenticated' do
+      it 'responds with 401 Unauthorized' do
+        patch update_profile_pic_path, headers: api_headers
+        expect(response).to have_http_status(:unauthorized)
+      end
+    end
 
-        it 'succeeds' do
-          expect(response).to have_http_status(:no_content)
-          expect(Picture.count).to eq 1
-        end
+    context 'when authenticated' do
+      before do
+        login(user)
+      end
+
+      it 'succeeds' do
+        patch update_profile_pic_path,
+              params:  {profile: updated_profile_pic_params},
+              headers: api_headers(response.headers)
+        expect(response).to have_http_status(:no_content)
+        expect(Picture.count).to eq 1
       end
     end
   end
