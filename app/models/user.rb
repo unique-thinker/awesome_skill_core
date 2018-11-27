@@ -23,8 +23,8 @@ class User < ApplicationRecord
   has_many :aspects, dependent: :destroy
 
   has_many :friendships, inverse_of: :user, dependent: :destroy
-  has_many :friends, -> { where(friendships: { confirmed: true }) }, through: :friendships, source: :friend
-  has_many :friend_requests, -> { where(friendships: { confirmed: false }) }, through: :friendships, source: :friend
+  has_many :friends, -> { where(friendships: {confirmed: true}) }, through: :friendships, source: :friend
+  has_many :friend_requests, -> { where(friendships: {confirmed: false}) }, through: :friendships, source: :friend
 
   # Delegates
   delegate :owns?, :follow, :unfollow, to: :person

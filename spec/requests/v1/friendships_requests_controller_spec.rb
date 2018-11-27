@@ -4,7 +4,7 @@ require 'rails_helper'
 
 RSpec.describe Api::V1::FriendshipRequestsController, type: :request do
   # URL
-  let(:friend_request_path)   { '/friendship_requests' }
+  let(:friend_request_path) { '/friendship_requests' }
   let(:send_friend_request_path)   { '/friendship_requests' }
   let(:accept_friend_request_path) { "/friendship_requests/#{user2.person.id}" }
   let(:cancel_friend_request_path) { "/friendship_requests/#{user2.person.id}" }
@@ -36,8 +36,8 @@ RSpec.describe Api::V1::FriendshipRequestsController, type: :request do
         get friend_request_path, headers: api_headers(response.headers)
         expect(response).to have_http_status(200)
         data = json_response[:data]
-        expect(data[:friend_request][0][:relationships][:friend][:data][:id]).to eq (user2.person.id.to_s)
-        expect(data[:send_friend_request][0][:relationships][:friend][:data][:id]).to eq (user2.person.id.to_s)
+        expect(data[:friend_request][0][:relationships][:friend][:data][:id]).to eq user2.person.id.to_s
+        expect(data[:send_friend_request][0][:relationships][:friend][:data][:id]).to eq user2.person.id.to_s
       end
     end
   end
@@ -57,7 +57,7 @@ RSpec.describe Api::V1::FriendshipRequestsController, type: :request do
 
       it 'send a friend request with valid params' do
         post send_friend_request_path,
-             params: friendship_params,
+             params:  friendship_params,
              headers: api_headers(response.headers)
         expect(response).to have_http_status(201)
         expect(Friendship.count).to eq 1
@@ -65,7 +65,7 @@ RSpec.describe Api::V1::FriendshipRequestsController, type: :request do
 
       it 'send a friend request with invalid params' do
         post send_friend_request_path,
-             params: {id: 8_888_888},
+             params:  {id: 8_888_888},
              headers: api_headers(response.headers)
         expect(response).to have_http_status(404)
         expect(Friendship.count).to eq 0
@@ -73,7 +73,7 @@ RSpec.describe Api::V1::FriendshipRequestsController, type: :request do
 
       it 'won’t be able to befriend himself' do
         post send_friend_request_path,
-             params: { id: user1.id },
+             params:  {id: user1.id},
              headers: api_headers(response.headers)
         expect(response).to have_http_status(422)
         expect(Friendship.count).to eq 0
@@ -81,10 +81,10 @@ RSpec.describe Api::V1::FriendshipRequestsController, type: :request do
 
       it 'shouldn’t be able to send friend requests, if they’re already friends' do
         post send_friend_request_path,
-             params: friendship_params,
+             params:  friendship_params,
              headers: api_headers(response.headers)
         post send_friend_request_path,
-             params: friendship_params,
+             params:  friendship_params,
              headers: api_headers(response.headers)
         expect(response).to have_http_status(422)
         expect(Friendship.count).to eq 1
@@ -96,7 +96,7 @@ RSpec.describe Api::V1::FriendshipRequestsController, type: :request do
               params:  friendship_params,
               headers: api_headers(response.headers)
         post send_friend_request_path,
-             params: friendship_params,
+             params:  friendship_params,
              headers: api_headers(response.headers)
         expect(response).to have_http_status(422)
         expect(Friendship.count).to eq 2

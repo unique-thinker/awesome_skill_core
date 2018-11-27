@@ -4,14 +4,14 @@ require 'rails_helper'
 
 RSpec.describe Api::V1::RelationshipsController, type: :request do
   # URL
-  let(:follow_path)   { '/follow' }
-  let(:unfollow_path)   { '/unfollow' }
+  let(:follow_path) { '/follow' }
+  let(:unfollow_path) { '/unfollow' }
 
   let(:user1) { create(:user) }
   let(:user2) { create(:user) }
   let(:person1) { user1.person }
   let(:person2) { user2.person }
-  let(:relationship_params) {{ guid: person2.guid }}
+  let(:relationship_params) { {guid: person2.guid} }
 
   describe 'POST /follow' do
     context 'when unauthenticated' do
@@ -33,13 +33,13 @@ RSpec.describe Api::V1::RelationshipsController, type: :request do
       end
 
       it 'responds with 422' do
-        post follow_path, params: { guid: guid }, headers: api_headers(response.headers)
+        post follow_path, params: {guid: guid}, headers: api_headers(response.headers)
         expect(response).to have_http_status(422)
         expect(Follow.count).to eq person1.following_relationships.count
       end
 
       it 'shouldn’t be able to follow ourself' do
-        post follow_path, params: { guid: person1.guid}, headers: api_headers(response.headers)
+        post follow_path, params: {guid: person1.guid}, headers: api_headers(response.headers)
         expect(response).to have_http_status(422)
         expect(Follow.count).to eq person1.following_relationships.count
       end
@@ -81,7 +81,7 @@ RSpec.describe Api::V1::RelationshipsController, type: :request do
       end
 
       it 'responds with 422' do
-        delete unfollow_path, params: { guid: guid }, headers: api_headers(response.headers)
+        delete unfollow_path, params: {guid: guid}, headers: api_headers(response.headers)
         expect(response).to have_http_status(422)
         expect(Follow.count).to eq person1.following_relationships.count
       end
@@ -89,7 +89,7 @@ RSpec.describe Api::V1::RelationshipsController, type: :request do
       it 'shouldn\'t be able to unfollow, if they aren\'t following' do
         user1.follow(user2.person)
         person3 = create(:person)
-        delete unfollow_path, params: { guid: person3.guid }, headers: api_headers(response.headers)
+        delete unfollow_path, params: {guid: person3.guid}, headers: api_headers(response.headers)
         expect(response).to have_http_status(422)
         expect(Follow.count).to eq person1.following_relationships.count
       end

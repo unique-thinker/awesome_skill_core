@@ -23,6 +23,7 @@ class Api::V1::RelationshipsController < Api::BaseController
   end
 
   private
+
   def find_person
     @person = Person.find_by(guid: params[:guid])
   end
