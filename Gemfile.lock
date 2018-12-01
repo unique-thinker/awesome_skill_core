@@ -236,6 +236,8 @@ GEM
       actionpack (>= 4.0)
       activesupport (>= 4.0)
       sprockets (>= 3.0.0)
+    streamio-ffmpeg (3.0.2)
+      multi_json (~> 1.8)
     systemu (2.6.5)
     thor (0.20.0)
     thread_safe (0.3.6)
@@ -280,6 +282,7 @@ DEPENDENCIES
   shoulda (~> 3.6)
   spring
   spring-watcher-listen (~> 2.0.0)
+  streamio-ffmpeg (~> 3.0, >= 3.0.2)
   tzinfo-data
   uuid (= 2.3.9)
 
