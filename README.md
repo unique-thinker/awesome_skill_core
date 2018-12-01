@@ -30,7 +30,8 @@ Things you may want to cover:
         - Ruby 2.5.1
         - Bundler: http://bundler.io/
         - Postgres: https://postgresapp.com/
-        - ffmpeg: https://ffmpeg.org/ffprobe.html is a command line toolbox to manipulate, convert and stream multimedia content.
+        - FFMPEG: https://ffmpeg.org/ffprobe.html is a command line toolbox to manipulate, convert and stream multimedia content.
+        - Redis: https://redis.io/
 
 * How to Install
 `bundle install`
