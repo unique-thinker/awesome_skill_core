@@ -84,15 +84,20 @@ ActiveRecord::Schema.define(version: 2018_11_29_110249) do
   create_table "pictures", force: :cascade do |t|
     t.boolean "public", default: false, null: false
     t.string "guid", null: false
-    t.text "text"
+    t.string "title"
+    t.text "description"
     t.text "remote_image_path"
     t.string "remote_image_name"
     t.string "random_string"
+    t.integer "height"
+    t.integer "width"
     t.string "processed_image"
+    t.bigint "author_id", null: false
     t.string "imageable_type"
     t.bigint "imageable_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["author_id"], name: "index_pictures_on_person_id"
     t.index ["guid"], name: "index_pictures_on_guid", unique: true
     t.index ["imageable_type", "imageable_id"], name: "index_pictures_on_imageable_type_and_imageable_id"
   end
@@ -208,6 +213,7 @@ ActiveRecord::Schema.define(version: 2018_11_29_110249) do
   add_foreign_key "friendships", "people", column: "friend_id", name: "friendships_friend_id_fk", on_delete: :cascade
   add_foreign_key "friendships", "users"
   add_foreign_key "people", "users", column: "owner_id"
+  add_foreign_key "pictures", "people", column: "author_id", name: "pictures_author_id_fk", on_delete: :cascade
   add_foreign_key "profiles", "people", on_delete: :cascade
   add_foreign_key "videos", "people", column: "author_id", name: "videos_author_id_fk", on_delete: :cascade
   add_foreign_key "votes", "people", column: "author_id", name: "votes_author_id_fk", on_delete: :cascade
