@@ -3,6 +3,7 @@
 class ProcessedImage < ImageUploader
   include StoreDirectory
 
+  process :store_dimensions
   after :remove, :delete_empty_upstream_dirs
 
   version :thumb_small do
@@ -40,5 +41,11 @@ class ProcessedImage < ImageUploader
     Dir.delete(path) # fails if path not empty dir
   rescue SystemCallError
     true # nothing, the dir is not empty
+  end
+
+  def store_dimensions
+    if file && model
+      model.width, model.height = ::MiniMagick::Image.open(file.file)[:dimensions]
+    end
   end
 end
