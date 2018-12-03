@@ -1,19 +1,9 @@
 # frozen_string_literal: true
 
 class ProcessedImage < ImageUploader
+  include StoreDirectory
+
   after :remove, :delete_empty_upstream_dirs
-
-  def store_dir
-    "#{base_store_dir}/#{model.random_string[0..5]}"
-  end
-
-  def base_store_dir
-    "uploads/#{model.guid}"
-  end
-
-  def filename
-    model.random_string + File.extname(@filename) if @filename
-  end
 
   version :thumb_small do
     process efficient_conversion: [50, 50]

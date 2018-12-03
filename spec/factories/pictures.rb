@@ -4,9 +4,11 @@ FactoryBot.define do
   factory :picture do |_pic|
     sequence(:random_string) {|_n| SecureRandom.hex(10) }
     association :imageable, factory: :post
-    processed_image { Rack::Test::UploadedFile.new(Rails.root.join('spec', 'fixtures', 'picture.png'), 'image/jpeg') }
 
-    after(:build, &:update_remote_path)
+    after(:build) do |p|
+      p.processed_image.store! Rack::Test::UploadedFile.new(Rails.root.join('spec', 'fixtures', 'picture.png'), 'image/jpeg')
+      p.update_remote_path
+    end
   end
 
   factory(:remote_photo, parent: :picture) do
