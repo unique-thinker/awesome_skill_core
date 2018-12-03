@@ -3,6 +3,7 @@
 FactoryBot.define do
   factory :picture do |_pic|
     sequence(:random_string) {|_n| SecureRandom.hex(10) }
+    association :author, factory: :person
     association :imageable, factory: :post
 
     after(:build) do |p|
