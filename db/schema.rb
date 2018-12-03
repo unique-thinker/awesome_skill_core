@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2018_11_24_095502) do
+ActiveRecord::Schema.define(version: 2018_11_29_110249) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -161,6 +161,29 @@ ActiveRecord::Schema.define(version: 2018_11_24_095502) do
     t.index ["username"], name: "index_users_on_username", unique: true
   end
 
+  create_table "videos", force: :cascade do |t|
+    t.boolean "public", default: false, null: false
+    t.string "guid", null: false
+    t.string "title"
+    t.text "description"
+    t.text "remote_video_path"
+    t.string "remote_video_name"
+    t.string "random_string"
+    t.string "duration"
+    t.integer "height"
+    t.integer "width"
+    t.string "processed_video"
+    t.integer "views_count"
+    t.bigint "author_id", null: false
+    t.string "videoable_type"
+    t.bigint "videoable_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["author_id"], name: "index_videos_on_person_id"
+    t.index ["guid"], name: "index_videos_on_guid", unique: true
+    t.index ["videoable_type", "videoable_id"], name: "index_videos_on_videoable_type_and_videoable_id"
+  end
+
   create_table "votes", force: :cascade do |t|
     t.boolean "positive"
     t.string "guid"
@@ -186,5 +209,6 @@ ActiveRecord::Schema.define(version: 2018_11_24_095502) do
   add_foreign_key "friendships", "users"
   add_foreign_key "people", "users", column: "owner_id"
   add_foreign_key "profiles", "people", on_delete: :cascade
+  add_foreign_key "videos", "people", column: "author_id", name: "videos_author_id_fk", on_delete: :cascade
   add_foreign_key "votes", "people", column: "author_id", name: "votes_author_id_fk", on_delete: :cascade
 end
