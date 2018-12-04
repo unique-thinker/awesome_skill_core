@@ -5,7 +5,8 @@ require 'rails_helper'
 RSpec.describe Friendship, type: :model do
   it { is_expected.to respond_to(:user_id) }
   it { is_expected.to respond_to(:friend_id) }
-  it { is_expected.to respond_to(:confirmed) }
+  it { is_expected.to respond_to(:kind) }
+  it { is_expected.to respond_to(:status) }
   it { should belong_to(:user) }
   it { should belong_to(:friend) }
 
@@ -24,10 +25,12 @@ RSpec.describe Friendship, type: :model do
     end
 
     it 'validates uniqueness' do
-      friendship1 = user.friendships.build(friend: person, confirmed: true)
+      friendship1 = user.friendships.build(friend: person, kind: :social_friend)
+      friendship1.accepted!
       expect(friendship1).to be_valid
 
-      friendship2 = user.friendships.build(friend: user.person, confirmed: true)
+      friendship2 = user.friendships.build(friend: user.person, kind: :social_friend)
+      friendship1.accepted!
       expect(friendship2).not_to be_valid
     end
   end

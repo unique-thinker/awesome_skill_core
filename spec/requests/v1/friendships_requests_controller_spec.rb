@@ -11,9 +11,9 @@ RSpec.describe Api::V1::FriendshipRequestsController, type: :request do
 
   let(:user1) { create(:user) }
   let(:user2) { create(:user) }
-  let(:user1_friends) { create_list(:friendship, 5, user: user1, confirmed: true) }
-  let(:user1_send_friend_request) { build(:friendship, user: user1, friend: user2.person, confirmed: false) }
-  let(:user2_send_friend_request) { build(:friendship, user: user2, friend: user1.person, confirmed: false) }
+  let(:user1_friends) { create_list(:friendship, 5, user: user1, status: :accepted) }
+  let(:user1_send_friend_request) { build(:friendship, user: user1, friend: user2.person, status: :pending) }
+  let(:user2_send_friend_request) { build(:friendship, user: user2, friend: user1.person, status: :pending) }
   let(:friendship_params) { {id: user2.person.id} }
 
   describe 'GET /friendships' do
@@ -123,7 +123,7 @@ RSpec.describe Api::V1::FriendshipRequestsController, type: :request do
               params:  friendship_params,
               headers: api_headers(response.headers)
         expect(response).to have_http_status(204)
-        expect(Friendship.where(confirmed: true).count).to eq 2
+        expect(Friendship.accepted.count).to eq 2
       end
 
       it 'not accept a friend request and return error' do
@@ -132,7 +132,7 @@ RSpec.describe Api::V1::FriendshipRequestsController, type: :request do
               headers: api_headers(response.headers)
         expect(response).to have_http_status(422)
         expect(Friendship.count).to eq 0
-        expect(Friendship.where(confirmed: true).count).to eq 0
+        expect(Friendship.accepted.count).to eq 0
       end
 
       it 'shouldn’t be able to accept friend requests, if they’re already friends' do
@@ -144,7 +144,7 @@ RSpec.describe Api::V1::FriendshipRequestsController, type: :request do
               params:  friendship_params,
               headers: api_headers(response.headers)
         expect(response).to have_http_status(422)
-        expect(Friendship.where(confirmed: true).count).to eq 2
+        expect(Friendship.accepted.count).to eq 2
       end
     end
   end
@@ -163,7 +163,7 @@ RSpec.describe Api::V1::FriendshipRequestsController, type: :request do
       end
 
       it 'cancel a send friend request' do
-        create(:friendship, user: user1, friend: user2.person, confirmed: false)
+        create(:friendship, user: user1, friend: user2.person, status: :pending)
         delete cancel_friend_request_path,
                params:  friendship_params,
                headers: api_headers(response.headers)
@@ -203,7 +203,7 @@ RSpec.describe Api::V1::FriendshipRequestsController, type: :request do
                params:  friendship_params,
                headers: api_headers(response.headers)
         expect(response).to have_http_status(204)
-        expect(Friendship.where(user: user1, confirmed: true).count).to eq friend_count
+        expect(Friendship.where(user: user1).accepted.count).to eq friend_count
       end
 
       it 'should return error' do
@@ -215,7 +215,7 @@ RSpec.describe Api::V1::FriendshipRequestsController, type: :request do
                params:  {id: user3.person.id},
                headers: api_headers(response.headers)
         expect(response).to have_http_status(422)
-        expect(Friendship.where(user: user1, confirmed: true).count).to eq friend_count
+        expect(Friendship.where(user: user1).accepted.count).to eq friend_count
       end
     end
   end
