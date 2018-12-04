@@ -9,7 +9,8 @@ class CreateFriendships < ActiveRecord::Migration[5.2]
                    foreign_key: {to_table: :people, name: :friendships_friend_id_fk, on_delete: :cascade},
                    index:       {name: :index_friendships_on_friend_id},
                    null:        false
-      t.boolean :confirmed, null: false
+      t.string :kind, null: false
+      t.string :status, null: false
 
       t.timestamps
     end
