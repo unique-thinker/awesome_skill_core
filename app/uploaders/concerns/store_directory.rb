@@ -4,11 +4,11 @@ module StoreDirectory
   extend ActiveSupport::Concern
 
   def store_dir
-    "#{base_store_dir}/#{model.random_string[0..(model.random_string.size/2)]}"
+    "#{base_store_dir}/#{model.random_string[0..(model.random_string.size / 2)]}"
   end
 
   def base_store_dir
-    "uploads/#{model.class.table_name}/#{model.guid[0..(model.guid.size/2)]}"
+    "uploads/#{model.class.table_name}/#{model.guid[0..(model.guid.size / 2)]}"
   end
 
   def filename

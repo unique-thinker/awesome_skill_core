@@ -91,7 +91,7 @@ class User < ApplicationRecord
   end
 
   def unfriend(friend)
-    friendship = Friendship.where(user: [self, friend.owner], friend: [friend, person], status: [:pending, :accepted])
+    friendship = Friendship.where(user: [self, friend.owner], friend: [friend, person], status: %i[pending accepted])
     !friendship.empty? && friendship.destroy_all
   end
 end

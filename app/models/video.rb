@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Video < ApplicationRecord
   include Fields::Author
   include Shareable
@@ -28,12 +30,14 @@ class Video < ApplicationRecord
     self.remote_video_name = remote_path.slice(name_start + 1, remote_path.length)
   end
 
-  def url(format = nil)
+  def url(format=nil)
     uploaded_path = encode_path(file.path.sub(File.expand_path(root), ''))
     return uploaded_path if format.nil?
+
     files = Dir.entries(File.dirname(file.path))
     files.each do |f|
       next unless File.extname(f) == '.' + format.to_s
+
       return File.dirname(uploaded_path) + '/' + f
     end
   end

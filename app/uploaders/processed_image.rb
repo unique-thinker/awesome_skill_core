@@ -44,8 +44,6 @@ class ProcessedImage < ImageUploader
   end
 
   def store_dimensions
-    if file && model
-      model.width, model.height = ::MiniMagick::Image.open(file.file)[:dimensions]
-    end
+    model.width, model.height = ::MiniMagick::Image.open(file.file)[:dimensions] if file && model
   end
 end

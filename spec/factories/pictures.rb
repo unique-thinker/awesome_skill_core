@@ -7,7 +7,9 @@ FactoryBot.define do
     association :imageable, factory: :post
 
     after(:build) do |p|
-      p.processed_image.store! Rack::Test::UploadedFile.new(Rails.root.join('spec', 'fixtures', 'picture.png'), 'image/jpeg')
+      p.processed_image.store! Rack::Test::UploadedFile.new(
+        Rails.root.join('spec', 'fixtures', 'picture.png'), 'image/jpeg'
+      )
       p.update_remote_path
     end
   end
