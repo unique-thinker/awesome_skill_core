@@ -23,8 +23,8 @@ class User < ApplicationRecord
   has_many :aspects, dependent: :destroy
 
   has_many :friendships, inverse_of: :user, dependent: :destroy
-  has_many :friends, -> { where(friendships: {confirmed: true}) }, through: :friendships, source: :friend
-  has_many :friend_requests, -> { where(friendships: {confirmed: false}) }, through: :friendships, source: :friend
+  has_many :friends, -> { where(friendships: {status: :accepted}) }, through: :friendships, source: :friend
+  has_many :friend_requests, -> { where(friendships: {status: :pending}) }, through: :friendships, source: :friend
 
   # Delegates
   delegate :owns?, :follow, :unfollow, to: :person
@@ -79,19 +79,19 @@ class User < ApplicationRecord
 
   ######### Friend Request #########
   def send_friend_request(friend)
-    friendships.build(friend: friend, confirmed: false)
+    friendships.build(friend: friend, kind: :social_friend, status: :pending)
     save
   end
 
   def accept_friend_request(friend)
-    friend_request = friend.owner.friendships.find_by(friend: person, confirmed: false)
+    friend_request = friend.owner.friendships.where(friend: person).pending.first
     transaction do
-      friend_request&.update(confirmed: true) && friendships.build(friend: friend, confirmed: true).save
+      friend_request&.accepted! && friendships.build(friend: friend, kind: :social_friend).accepted!
     end
   end
 
   def unfriend(friend)
-    friendship = Friendship.where(user: [self, friend.owner], friend: [friend, person], confirmed: [true, false])
+    friendship = Friendship.where(user: [self, friend.owner], friend: [friend, person], status: [:pending, :accepted])
     !friendship.empty? && friendship.destroy_all
   end
 end
