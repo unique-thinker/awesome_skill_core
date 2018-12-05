@@ -39,6 +39,9 @@ gem 'streamio-ffmpeg', '3.0.2'
 # Backgroud worker
 gem 'sidekiq', '5.2.3'
 
+# ActiveRecord model to be organized in a tree structure
+gem 'ancestry', '3.0.5'
+
 # Build JSON APIs with ease. Read more: https://github.com/rails/jbuilder
 # gem 'jbuilder', '~> 2.5'
 # Use Redis adapter to run Action Cable in production
