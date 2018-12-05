@@ -11,4 +11,6 @@ RSpec.describe Post, type: :model do
   it { should validate_uniqueness_of(:guid) }
   it { should belong_to(:postable) }
   it { should validate_length_of(:text).is_at_most(65_535) }
+  it { should have_many(:categorizations) }
+  it { should have_many(:categories).through(:categorizations) }
 end
