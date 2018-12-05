@@ -6,7 +6,7 @@ class Category < ApplicationRecord
 
   # Association
   has_ancestry
-  has_many :categorizations, inverse_of:  :category
+  has_many :categorizations
   has_many :posts, through: :categorizations
 
   # Validations

@@ -6,7 +6,7 @@ class Post < ApplicationRecord
   # Association
   belongs_to :postable, polymorphic: true
   has_many :pictures, as: :imageable, dependent: :destroy
-  has_many :categorizations, inverse_of:  :post
+  has_many :categorizations
   has_many :categories, through: :categorizations
 
   # Validations
