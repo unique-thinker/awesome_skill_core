@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2018_11_29_110249) do
+ActiveRecord::Schema.define(version: 2018_12_05_063157) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -34,6 +34,25 @@ ActiveRecord::Schema.define(version: 2018_11_29_110249) do
     t.datetime "updated_at", null: false
     t.index ["user_id", "name"], name: "index_aspects_on_user_id_and_name", unique: true
     t.index ["user_id"], name: "index_aspects_on_user_id"
+  end
+
+  create_table "categories", force: :cascade do |t|
+    t.string "guid", null: false
+    t.string "name", null: false
+    t.string "ancestry"
+    t.string "kind", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["ancestry"], name: "index_categories_on_ancestry"
+    t.index ["guid"], name: "index_categories_on_guid", unique: true
+  end
+
+  create_table "categorizations", force: :cascade do |t|
+    t.bigint "category_id"
+    t.bigint "post_id"
+    t.index ["category_id", "post_id"], name: "index_categorizations_on_category_id_and_post_id"
+    t.index ["category_id"], name: "index_categorizations_on_category_id"
+    t.index ["post_id"], name: "index_categorizations_on_post_id"
   end
 
   create_table "comments", force: :cascade do |t|
@@ -208,6 +227,8 @@ ActiveRecord::Schema.define(version: 2018_11_29_110249) do
 
   add_foreign_key "aspect_visibilities", "aspects", on_delete: :cascade
   add_foreign_key "aspects", "users"
+  add_foreign_key "categorizations", "categories"
+  add_foreign_key "categorizations", "posts"
   add_foreign_key "comments", "people", column: "author_id", name: "comments_author_id_fk", on_delete: :cascade
   add_foreign_key "follows", "people", column: "follower_id"
   add_foreign_key "follows", "people", column: "following_id"
