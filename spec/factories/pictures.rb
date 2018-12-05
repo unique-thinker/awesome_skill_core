@@ -2,6 +2,8 @@
 
 FactoryBot.define do
   factory :picture do |_pic|
+    title { Faker::Hipster.sentence }
+    description { Faker::Hipster.paragraph }
     sequence(:random_string) {|_n| SecureRandom.hex(10) }
     association :author, factory: :person
     association :imageable, factory: :post
