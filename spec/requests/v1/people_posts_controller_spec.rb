@@ -12,6 +12,8 @@ RSpec.describe Api::V1::PeoplePostsController, type: :request do
   let(:aspect_1) { user.aspects.first }
   let(:aspect_2) { user.aspects.build(name: 'my apsect') }
   let(:people_post) { build(:post) }
+  let(:picture_category_ids) { build_list(:category, 5, kind: :picture) }
+  let(:video_category_ids) { build_list(:category, 5, kind: :video) }
 
   let(:post_valid_params) {
     {
@@ -109,9 +111,9 @@ RSpec.describe Api::V1::PeoplePostsController, type: :request do
 
       context 'with pictures' do
         before do
-          @image_files = [Rack::Test::UploadedFile.new(
+          @image_files = Rack::Test::UploadedFile.new(
             Rails.root.join('spec', 'fixtures', 'picture.png').to_s, 'image/png'
-          )]
+          )
         end
 
         it 'will post a picture without text' do
@@ -120,6 +122,110 @@ RSpec.describe Api::V1::PeoplePostsController, type: :request do
                params:  post_valid_params.merge(image_files: @image_files),
                headers: api_headers(response.headers)
           expect(response).to have_http_status(201)
+          expect(Post.last.pictures.count).to eq 1
+        end
+
+        context 'with categories' do
+          before do
+            picture_category_ids.each {|c| c.save}
+            video_category_ids.each {|c| c.save}
+          end
+
+          it 'will post a picture' do
+            post_valid_params[:aspect_ids] = 'public'
+            post_valid_params[:category_ids] = Category.picture.sample.id
+            post create_post_path,
+                 params:  post_valid_params.merge(image_files: @image_files),
+                 headers: api_headers(response.headers)
+            expect(response).to have_http_status(201)
+            post = Post.last
+            expect(post.pictures.count).to eq 1
+            expect(post.categories.count).to eq 1
+            expect(post.categories.first.id).to eq post_valid_params[:category_ids]
+          end
+
+          it 'non public picture will not save in category' do
+            post_valid_params[:category_ids] = Category.picture.sample.id
+            post create_post_path,
+                 params:  post_valid_params.merge(image_files: @image_files),
+                 headers: api_headers(response.headers)
+            expect(response).to have_http_status(201)
+            post = Post.last
+            expect(post.pictures.count).to eq 1
+            expect(post.categories.count).to eq 0
+          end
+
+          it 'picture not store in category with video category' do
+            post_valid_params[:aspect_ids] = 'public'
+            post_valid_params[:category_ids] = Category.video.sample.id
+            post create_post_path,
+                 params:  post_valid_params.merge(image_files: @image_files),
+                 headers: api_headers(response.headers)
+            expect(response).to have_http_status(201)
+            post = Post.last
+            expect(post.pictures.count).to eq 1
+            expect(post.categories.count).to eq 0
+          end
+        end
+      end
+
+      context 'with videos' do
+        before do
+          @video_files = Rack::Test::UploadedFile.new(
+            Rails.root.join('spec', 'fixtures', 'video.mp4').to_s, 'video/mp4'
+          )
+        end
+
+        it 'will post a video without text' do
+          post_valid_params.delete :text
+          post create_post_path,
+               params:  post_valid_params.merge(video_files: @video_files),
+               headers: api_headers(response.headers)
+          expect(response).to have_http_status(201)
+          expect(Post.last.videos.count).to eq 1
+        end
+
+        context 'with categories' do
+          before do
+            picture_category_ids.each {|c| c.save}
+            video_category_ids.each {|c| c.save}
+          end
+
+          it 'will post a video' do
+            post_valid_params[:aspect_ids] = 'public'
+            post_valid_params[:category_ids] = Category.video.sample.id
+            post create_post_path,
+                 params:  post_valid_params.merge(video_files: @video_files),
+                 headers: api_headers(response.headers)
+            expect(response).to have_http_status(201)
+            post = Post.last
+            expect(post.videos.count).to eq 1
+            expect(post.categories.count).to eq 1
+            expect(post.categories.first.id).to eq post_valid_params[:category_ids]
+          end
+
+          it 'non public video will not save in category' do
+            post_valid_params[:category_ids] = Category.video.sample.id
+            post create_post_path,
+                 params:  post_valid_params.merge(video_files: @video_files),
+                 headers: api_headers(response.headers)
+            expect(response).to have_http_status(201)
+            post = Post.last
+            expect(post.videos.count).to eq 1
+            expect(post.categories.count).to eq 0
+          end
+
+          it 'video not store in category with picture category' do
+            post_valid_params[:aspect_ids] = 'public'
+            post_valid_params[:category_ids] = Category.picture.sample.id
+            post create_post_path,
+                 params:  post_valid_params.merge(video_files: @video_files),
+                 headers: api_headers(response.headers)
+            expect(response).to have_http_status(201)
+            post = Post.last
+            expect(post.videos.count).to eq 1
+            expect(post.categories.count).to eq 0
+          end
         end
       end
     end
