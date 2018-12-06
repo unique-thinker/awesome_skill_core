@@ -8,11 +8,13 @@ RSpec.describe PostManager::PeoplePostCreationService, type: :service do
   let(:aspect) { user_1.aspects.first }
   let(:aspect_list) { create_list(:aspect, 5) }
   let(:pictures) { build_list(:picture, 2) }
+  let(:videos) { build_list(:video, 2) }
   let(:post_params) {
     {
       post_message: build_attributes(:post).slice(:text),
       aspect_ids:   [aspect.id.to_s],
-      pictures:     []
+      pictures:     [],
+      videos:     []
     }
   }
 
@@ -65,7 +67,7 @@ RSpec.describe PostManager::PeoplePostCreationService, type: :service do
       end
     end
 
-    context 'with pictures' do
+    context 'when pictures' do
       it 'it attaches all pictures' do
         post = PostManager::PeoplePostCreationService.call(post_params.merge!(user: user_1, pictures: pictures))
         pictures = post.pictures
@@ -91,6 +93,37 @@ RSpec.describe PostManager::PeoplePostCreationService, type: :service do
           post = PostManager::PeoplePostCreationService.call(post_params.merge!(user: user_1, pictures: pictures))
           post.pictures.each do |pic|
             expect(pic.aspect_visibilities.map(&:aspect)).to eq([aspect])
+          end
+        end
+      end
+    end
+
+    context 'when videos' do
+      it 'it attaches all videos' do
+        post = PostManager::PeoplePostCreationService.call(post_params.merge!(user: user_1, videos: videos))
+        videos = post.videos
+        expect(videos.size).to eq(2)
+      end
+
+      it 'does not attach videos without videos param' do
+        post = PostManager::PeoplePostCreationService.call(post_params.merge!(user: user_1))
+        expect(post.videos).to be_empty
+      end
+
+      context 'with aspect_ids' do
+        it 'it marks the videos as non-public if the post is non-public' do
+          post = PostManager::PeoplePostCreationService.call(post_params.merge!(user: user_1, videos: videos))
+          post.videos.each do |video|
+            expect(video.public).to be_falsey
+          end
+        end
+
+        it 'creates aspect_visibilities for the Video' do
+          user_1.aspects.create(name: 'another aspect')
+
+          post = PostManager::PeoplePostCreationService.call(post_params.merge!(user: user_1, videos: videos))
+          post.videos.each do |video|
+            expect(video.aspect_visibilities.map(&:aspect)).to eq([aspect])
           end
         end
       end
