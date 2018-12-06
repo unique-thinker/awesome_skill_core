@@ -112,6 +112,7 @@ ActiveRecord::Schema.define(version: 2018_12_05_063157) do
     t.integer "height"
     t.integer "width"
     t.string "processed_image"
+    t.integer "views_count"
     t.bigint "author_id", null: false
     t.string "imageable_type"
     t.bigint "imageable_id"

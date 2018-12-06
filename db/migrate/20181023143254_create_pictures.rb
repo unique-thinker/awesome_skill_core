@@ -13,6 +13,7 @@ class CreatePictures < ActiveRecord::Migration[5.2]
       t.integer  :height
       t.integer  :width
       t.string   :processed_image
+      t.integer  :views_count
       t.references :author,
                    references:  :people,
                    foreign_key: {to_table: :people, name: :pictures_author_id_fk, on_delete: :cascade},
