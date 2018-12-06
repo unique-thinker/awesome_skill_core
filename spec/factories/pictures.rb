@@ -5,6 +5,7 @@ FactoryBot.define do
     title { Faker::Hipster.sentence }
     description { Faker::Hipster.paragraph }
     sequence(:random_string) {|_n| SecureRandom.hex(10) }
+    views_count { rand(1..100_000) }
     association :author, factory: :person
     association :imageable, factory: :post
 
