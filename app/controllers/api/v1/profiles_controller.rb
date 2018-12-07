@@ -24,9 +24,10 @@ class Api::V1::ProfilesController < Api::BaseController
 
   def update_picture
     profile = current_user.person.profile
-    @profile_picture = profile_picture_params.merge!(user: current_user, public: true)
-    pic = PictureCreationService.call(@profile_picture)
-    profile.picture = pic
+    @profile_picture = {media_file: params[:profile][:file]}
+    @profile_picture.merge!(user: current_user, public: true)
+    pic = MediaAttachmentService.call(@profile_picture)
+    profile.attachment = pic
     if profile.save
       head :no_content
     else
@@ -43,9 +44,5 @@ class Api::V1::ProfilesController < Api::BaseController
       :company, :current_place, :native_place,
       :state, :country
     )
-  end
-
-  def profile_picture_params
-    params.require(:profile).permit(:image_file)
   end
 end
