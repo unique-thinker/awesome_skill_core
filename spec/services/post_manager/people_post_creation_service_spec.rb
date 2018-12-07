@@ -100,7 +100,7 @@ RSpec.describe PostManager::PeoplePostCreationService, type: :service do
     context 'when videos' do
       it 'it attaches all videos' do
         post = PostManager::PeoplePostCreationService.call(post_params.merge!(user: user_1, attachments: videos))
-        videos =post.attachments.video
+        videos = post.attachments.video
         expect(videos.size).to eq(2)
       end
 

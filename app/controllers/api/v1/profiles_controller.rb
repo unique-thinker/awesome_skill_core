@@ -25,7 +25,8 @@ class Api::V1::ProfilesController < Api::BaseController
   def update_picture
     profile = current_user.person.profile
     @profile_picture = {media_file: params[:profile][:file]}
-    @profile_picture.merge!(user: current_user, public: true)
+    @profile_picture[:user] = current_user
+    @profile_picture[:public] = true
     pic = MediaAttachmentService.call(@profile_picture)
     profile.attachment = pic
     if profile.save

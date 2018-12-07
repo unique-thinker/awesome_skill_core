@@ -127,8 +127,8 @@ RSpec.describe Api::V1::PeoplePostsController, type: :request do
 
         context 'with categories' do
           before do
-            picture_category_ids.each {|c| c.save}
-            video_category_ids.each {|c| c.save}
+            picture_category_ids.each(&:save)
+            video_category_ids.each(&:save)
           end
 
           it 'will post a picture' do
@@ -187,8 +187,8 @@ RSpec.describe Api::V1::PeoplePostsController, type: :request do
 
         context 'with categories' do
           before do
-            picture_category_ids.each {|c| c.save}
-            video_category_ids.each {|c| c.save}
+            picture_category_ids.each(&:save)
+            video_category_ids.each(&:save)
           end
 
           it 'will post a video' do

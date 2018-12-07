@@ -41,14 +41,15 @@ class Api::V1::PeoplePostsController < Api::BaseController
   end
 
   private
+
   def normalize_params
     params.permit(
       post_message: [:text]
     ).to_h.merge(
-      aspect_ids:  normalize_aspect_ids,
+      aspect_ids:   normalize_aspect_ids,
       category_ids: normalize_category_ids,
-      public:      [*params[:aspect_ids]].first == 'public',
-      files:       [*params[:files]].compact
+      public:       [*params[:aspect_ids]].first == 'public',
+      files:        [*params[:files]].compact
     )
   end
 
@@ -73,6 +74,7 @@ class Api::V1::PeoplePostsController < Api::BaseController
   def store_media(post_params)
     attachments = []
     return attachments if post_params[:files].empty?
+
     post_params.delete(:files).each do |file|
       media = MediaAttachmentService.call(post_params.slice(:public, :user).merge!(media_file: file))
       attachments << media
@@ -82,6 +84,7 @@ class Api::V1::PeoplePostsController < Api::BaseController
 
   def store_post_categories(category_ids, post)
     return if category_ids.empty?
+
     if !post.attachments.image.empty?
       category_ids.each do |id|
         pic_category = Category.picture.find(id)
@@ -93,6 +96,6 @@ class Api::V1::PeoplePostsController < Api::BaseController
         post.categorizations.build(category: video_category)
       end
     end
-    rescue ActiveRecord::RecordNotFound => e
+  rescue ActiveRecord::RecordNotFound => e
   end
 end

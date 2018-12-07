@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 RSpec.describe Category, type: :model do
@@ -21,7 +23,7 @@ RSpec.describe Category, type: :model do
     end
 
     it 'type should be ENUM' do
-      expect{build(:category, kind: 'post')}.to raise_error(ArgumentError)
+      expect { build(:category, kind: 'post') }.to raise_error(ArgumentError)
     end
   end
 end

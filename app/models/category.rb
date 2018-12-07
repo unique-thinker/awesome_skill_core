@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Category < ApplicationRecord
   include Fields::Guid
 
@@ -10,7 +12,7 @@ class Category < ApplicationRecord
   has_many :posts, through: :categorizations
 
   # Validations
-  validates :kind, inclusion: { in: kinds.keys}
-  validates_presence_of :name, :guid, :kind
-  validates_uniqueness_of :guid
+  validates :kind, inclusion: {in: kinds.keys}
+  validates :name, :guid, :kind, presence: true
+  validates :guid, uniqueness: true
 end

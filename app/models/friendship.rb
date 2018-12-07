@@ -8,8 +8,8 @@ class Friendship < ApplicationRecord
   belongs_to :user, inverse_of: :friendships
   belongs_to :friend, class_name: 'Person', inverse_of: :friendships
   validates :friend_id, uniqueness: {scope: :user_id}
-  validates :kind, inclusion: { in: kinds.keys}
-  validates :status, inclusion: { in: statuses.keys}
+  validates :kind, inclusion: {in: kinds.keys}
+  validates :status, inclusion: {in: statuses.keys}
   validate :not_self, :not_friends, :not_pending, on: :create
 
   private

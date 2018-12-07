@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class MediaUploader < CarrierWave::Uploader::Base
   # Include RMagick or MiniMagick support:
   # include CarrierWave::RMagick
@@ -101,7 +103,7 @@ class MediaUploader < CarrierWave::Uploader::Base
       return {} unless img.valid?
 
       model.file_meta = {
-        width: img.width,
+        width:  img.width,
         height: img.height
       }
     elsif @video
@@ -110,14 +112,13 @@ class MediaUploader < CarrierWave::Uploader::Base
       return {} unless movie.valid?
 
       model.file_meta = {
-        width: movie.width,
-        height: movie.height,
+        width:      movie.width,
+        height:     movie.height,
         frame_rate: movie.frame_rate,
-        duration: movie.duration,
-        bitrate: movie.bitrate,
+        duration:   movie.duration,
+        bitrate:    movie.bitrate
       }
     end
-        
   end
 
   def image?(new_file)

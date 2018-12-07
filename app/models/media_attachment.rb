@@ -1,10 +1,12 @@
+# frozen_string_literal: true
+
 class MediaAttachment < ApplicationRecord
   include Fields::Author
   include Shareable
 
   # Association
   belongs_to :attachable, polymorphic: true
-  
+
   # ENUM
   enum kind: {video: 'video', image: 'image'}
 
