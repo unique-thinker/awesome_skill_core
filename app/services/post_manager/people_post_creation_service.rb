@@ -9,8 +9,7 @@ module PostManager
 
     def call
       build_people_post(@params).tap do |post|
-        post.pictures.concat(@params.delete(:pictures))
-        post.videos.concat(@params.delete(:videos))
+        post.attachments.concat(@params.delete(:attachments))
         unless post.public?
           load_aspects(@params[:aspect_ids])
           add_to_streams(post)
@@ -36,8 +35,7 @@ module PostManager
 
     def add_to_streams(post)
       user.add_to_streams(post, aspects)
-      post.pictures.each {|pic| user.add_to_streams(pic, aspects) }
-      post.videos.each {|video| user.add_to_streams(video, aspects) }
+      post.attachments.each {|media| user.add_to_streams(media, aspects) }
     end
   end
 end

@@ -7,14 +7,13 @@ class Api::V1::PeoplePostsController < Api::BaseController
   before_action :authenticate_user!
 
   def create
-    post_params = normalize_params.merge!(user: current_user)
-    pictures = store_pictures(post_params)
-    videos = store_videos(post_params)
-    post = PostManager::PeoplePostCreationService.call(post_params.merge(pictures: pictures, videos: videos))
+    post_params = normalize_params.merge(user: current_user)
+    attachments = store_media(post_params)
+    post = PostManager::PeoplePostCreationService.call(post_params.merge(attachments: attachments))
     store_post_categories(normalize_params[:category_ids], post)
 
     if post.save
-      options = {include: [:pictures, :videos]}
+      options = {include: [:attachments]}
       render json: Api::V1::PostSerializer.new(post, options), status: :created
     else
       render json: {success: false, errors: resource_errors(post)}, status: :unprocessable_entity
@@ -49,8 +48,7 @@ class Api::V1::PeoplePostsController < Api::BaseController
       aspect_ids:  normalize_aspect_ids,
       category_ids: normalize_category_ids,
       public:      [*params[:aspect_ids]].first == 'public',
-      image_files: [*params[:image_files]].compact,
-      video_files: [*params[:video_files]].compact
+      files:       [*params[:files]].compact
     )
   end
 
@@ -72,34 +70,24 @@ class Api::V1::PeoplePostsController < Api::BaseController
     end
   end
 
-  def store_pictures(post_params)
-    pictures = []
-    return pictures if post_params[:image_files].empty?
-    post_params.delete(:image_files).each do |image_file|
-      pic = PictureCreationService.call(post_params.slice(:public, :user).merge!(image_file: image_file))
-      pictures << pic
+  def store_media(post_params)
+    attachments = []
+    return attachments if post_params[:files].empty?
+    post_params.delete(:files).each do |file|
+      media = MediaAttachmentService.call(post_params.slice(:public, :user).merge!(media_file: file))
+      attachments << media
     end
-    pictures
-  end
-
-  def store_videos(post_params)
-    videos = []
-    return videos if post_params[:video_files].empty?
-    post_params.delete(:video_files).each do |video_file|
-      video = VideoCreationService.call(post_params.slice(:public, :user).merge!(video_file: video_file))
-      videos << video
-    end
-    videos
+    attachments
   end
 
   def store_post_categories(category_ids, post)
     return if category_ids.empty?
-    if !post.pictures.empty?
+    if !post.attachments.image.empty?
       category_ids.each do |id|
         pic_category = Category.picture.find(id)
         post.categorizations.build(category: pic_category)
       end
-    elsif !post.videos.empty?
+    elsif !post.attachments.video.empty?
       category_ids.each do |id|
         video_category = Category.video.find(id)
         post.categorizations.build(category: video_category)

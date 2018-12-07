@@ -6,8 +6,7 @@ class Post < ApplicationRecord
 
   # Association
   belongs_to :postable, polymorphic: true
-  has_many :pictures, as: :imageable, dependent: :destroy
-  has_many :videos, as: :videoable, dependent: :destroy
+  has_many :attachments, as: :attachable, class_name: 'MediaAttachment', dependent: :destroy
   has_many :categorizations
   has_many :categories, through: :categorizations
 
@@ -23,7 +22,7 @@ class Post < ApplicationRecord
   private
 
   def text_and_pictures_blank?
-    text.blank? && pictures.none?
+    text.blank? && attachments.none?
   end
 
   def presence_of_content

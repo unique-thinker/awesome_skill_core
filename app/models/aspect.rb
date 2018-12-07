@@ -5,8 +5,7 @@ class Aspect < ApplicationRecord
   belongs_to :user
   has_many :aspect_visibilities, dependent: :destroy
   has_many :posts, through: :aspect_visibilities, source: :shareable, source_type: 'Post'
-  has_many :pictures, through: :aspect_visibilities, source: :shareable, source_type: 'Picture'
-  has_many :videos, through: :aspect_visibilities, source: :shareable, source_type: 'Video'
+  has_many :attachments, through: :aspect_visibilities, source: :shareable, source_type: 'MediaAttachment'
 
   # Validations
   validates :name, presence: true, length: {maximum: 20}, null: false
@@ -25,10 +24,8 @@ class Aspect < ApplicationRecord
     case shareable
     when Post
       posts << shareable
-    when Picture
-      pictures << shareable
-    when Video
-      videos << shareable
+    when MediaAttachment
+      attachments << shareable
     else
       raise "Unknown shareable type '#{shareable.class.base_class}'"
     end

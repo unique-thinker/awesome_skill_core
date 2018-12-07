@@ -30,17 +30,6 @@ module VideoProcessing
       File.rename encoded_path, current_path
     end
 
-    def store_dimensions
-      return unless file && model && encoder_initialize(file.file)
-
-      model.width = @video.width
-      model.height = @video.height
-    end
-
-    def store_duration
-      model.duration = @video.duration if file && model && encoder_initialize(file.file)
-    end
-
     def encoder_initialize(path)
       @video = ::FFMPEG::Movie.new(path)
     end
