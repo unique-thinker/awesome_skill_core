@@ -119,10 +119,10 @@ RSpec.describe Api::V1::PeoplePostsController, type: :request do
         it 'will post a picture without text' do
           post_valid_params.delete :text
           post create_post_path,
-               params:  post_valid_params.merge(image_files: @image_files),
+               params:  post_valid_params.merge(files: @image_files),
                headers: api_headers(response.headers)
           expect(response).to have_http_status(201)
-          expect(Post.last.pictures.count).to eq 1
+          expect(Post.last.attachments.image.count).to eq 1
         end
 
         context 'with categories' do
@@ -135,11 +135,11 @@ RSpec.describe Api::V1::PeoplePostsController, type: :request do
             post_valid_params[:aspect_ids] = 'public'
             post_valid_params[:category_ids] = Category.picture.sample.id
             post create_post_path,
-                 params:  post_valid_params.merge(image_files: @image_files),
+                 params:  post_valid_params.merge(files: @image_files),
                  headers: api_headers(response.headers)
             expect(response).to have_http_status(201)
             post = Post.last
-            expect(post.pictures.count).to eq 1
+            expect(post.attachments.image.count).to eq 1
             expect(post.categories.count).to eq 1
             expect(post.categories.first.id).to eq post_valid_params[:category_ids]
           end
@@ -147,11 +147,11 @@ RSpec.describe Api::V1::PeoplePostsController, type: :request do
           it 'non public picture will not save in category' do
             post_valid_params[:category_ids] = Category.picture.sample.id
             post create_post_path,
-                 params:  post_valid_params.merge(image_files: @image_files),
+                 params:  post_valid_params.merge(files: @image_files),
                  headers: api_headers(response.headers)
             expect(response).to have_http_status(201)
             post = Post.last
-            expect(post.pictures.count).to eq 1
+            expect(post.attachments.image.count).to eq 1
             expect(post.categories.count).to eq 0
           end
 
@@ -159,11 +159,11 @@ RSpec.describe Api::V1::PeoplePostsController, type: :request do
             post_valid_params[:aspect_ids] = 'public'
             post_valid_params[:category_ids] = Category.video.sample.id
             post create_post_path,
-                 params:  post_valid_params.merge(image_files: @image_files),
+                 params:  post_valid_params.merge(files: @image_files),
                  headers: api_headers(response.headers)
             expect(response).to have_http_status(201)
             post = Post.last
-            expect(post.pictures.count).to eq 1
+            expect(post.attachments.image.count).to eq 1
             expect(post.categories.count).to eq 0
           end
         end
@@ -179,10 +179,10 @@ RSpec.describe Api::V1::PeoplePostsController, type: :request do
         it 'will post a video without text' do
           post_valid_params.delete :text
           post create_post_path,
-               params:  post_valid_params.merge(video_files: @video_files),
+               params:  post_valid_params.merge(files: @video_files),
                headers: api_headers(response.headers)
           expect(response).to have_http_status(201)
-          expect(Post.last.videos.count).to eq 1
+          expect(Post.last.attachments.video.count).to eq 1
         end
 
         context 'with categories' do
@@ -195,11 +195,11 @@ RSpec.describe Api::V1::PeoplePostsController, type: :request do
             post_valid_params[:aspect_ids] = 'public'
             post_valid_params[:category_ids] = Category.video.sample.id
             post create_post_path,
-                 params:  post_valid_params.merge(video_files: @video_files),
+                 params:  post_valid_params.merge(files: @video_files),
                  headers: api_headers(response.headers)
             expect(response).to have_http_status(201)
             post = Post.last
-            expect(post.videos.count).to eq 1
+            expect(post.attachments.video.count).to eq 1
             expect(post.categories.count).to eq 1
             expect(post.categories.first.id).to eq post_valid_params[:category_ids]
           end
@@ -207,11 +207,11 @@ RSpec.describe Api::V1::PeoplePostsController, type: :request do
           it 'non public video will not save in category' do
             post_valid_params[:category_ids] = Category.video.sample.id
             post create_post_path,
-                 params:  post_valid_params.merge(video_files: @video_files),
+                 params:  post_valid_params.merge(files: @video_files),
                  headers: api_headers(response.headers)
             expect(response).to have_http_status(201)
             post = Post.last
-            expect(post.videos.count).to eq 1
+            expect(post.attachments.video.count).to eq 1
             expect(post.categories.count).to eq 0
           end
 
@@ -219,11 +219,11 @@ RSpec.describe Api::V1::PeoplePostsController, type: :request do
             post_valid_params[:aspect_ids] = 'public'
             post_valid_params[:category_ids] = Category.picture.sample.id
             post create_post_path,
-                 params:  post_valid_params.merge(video_files: @video_files),
+                 params:  post_valid_params.merge(files: @video_files),
                  headers: api_headers(response.headers)
             expect(response).to have_http_status(201)
             post = Post.last
-            expect(post.videos.count).to eq 1
+            expect(post.attachments.video.count).to eq 1
             expect(post.categories.count).to eq 0
           end
         end

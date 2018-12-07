@@ -7,14 +7,13 @@ RSpec.describe PostManager::PeoplePostCreationService, type: :service do
   let(:user_2) { create(:user_with_aspects) }
   let(:aspect) { user_1.aspects.first }
   let(:aspect_list) { create_list(:aspect, 5) }
-  let(:pictures) { build_list(:picture, 2) }
-  let(:videos) { build_list(:video, 2) }
+  let(:pictures) { build_list(:image_attachment, 2) }
+  let(:videos) { build_list(:video_attachment, 2) }
   let(:post_params) {
     {
       post_message: build_attributes(:post).slice(:text),
       aspect_ids:   [aspect.id.to_s],
-      pictures:     [],
-      videos:     []
+      attachments:  []
     }
   }
 
@@ -26,7 +25,7 @@ RSpec.describe PostManager::PeoplePostCreationService, type: :service do
       expect(post.postable_type).to_not be_nil
       expect(post.postable_id).to_not be_nil
       expect(post.text).to eq(post_params[:post_message][:text])
-      expect(post.pictures.first).to be_nil
+      expect(post.attachments.first).to be_nil
     end
 
     context 'with aspect_ids' do
@@ -69,30 +68,30 @@ RSpec.describe PostManager::PeoplePostCreationService, type: :service do
 
     context 'when pictures' do
       it 'it attaches all pictures' do
-        post = PostManager::PeoplePostCreationService.call(post_params.merge!(user: user_1, pictures: pictures))
-        pictures = post.pictures
-        expect(pictures.size).to eq(2)
+        post = PostManager::PeoplePostCreationService.call(post_params.merge!(user: user_1, attachments: pictures))
+        images = post.attachments.image
+        expect(images.size).to eq(2)
       end
 
       it 'does not attach pictures without photos param' do
         post = PostManager::PeoplePostCreationService.call(post_params.merge!(user: user_1))
-        expect(post.pictures).to be_empty
+        expect(post.attachments).to be_empty
       end
 
       context 'with aspect_ids' do
         it 'it marks the pictures as non-public if the post is non-public' do
-          post = PostManager::PeoplePostCreationService.call(post_params.merge!(user: user_1, pictures: pictures))
-          post.pictures.each do |pic|
-            expect(pic.public).to be_falsey
+          post = PostManager::PeoplePostCreationService.call(post_params.merge!(user: user_1, attachments: pictures))
+          post.attachments.image.each do |img|
+            expect(img.public).to be_falsey
           end
         end
 
         it 'creates aspect_visibilities for the Picture' do
           user_1.aspects.create(name: 'another aspect')
 
-          post = PostManager::PeoplePostCreationService.call(post_params.merge!(user: user_1, pictures: pictures))
-          post.pictures.each do |pic|
-            expect(pic.aspect_visibilities.map(&:aspect)).to eq([aspect])
+          post = PostManager::PeoplePostCreationService.call(post_params.merge!(user: user_1, attachments: pictures))
+          post.attachments.image.each do |img|
+            expect(img.aspect_visibilities.map(&:aspect)).to eq([aspect])
           end
         end
       end
@@ -100,20 +99,20 @@ RSpec.describe PostManager::PeoplePostCreationService, type: :service do
 
     context 'when videos' do
       it 'it attaches all videos' do
-        post = PostManager::PeoplePostCreationService.call(post_params.merge!(user: user_1, videos: videos))
-        videos = post.videos
+        post = PostManager::PeoplePostCreationService.call(post_params.merge!(user: user_1, attachments: videos))
+        videos =post.attachments.video
         expect(videos.size).to eq(2)
       end
 
       it 'does not attach videos without videos param' do
         post = PostManager::PeoplePostCreationService.call(post_params.merge!(user: user_1))
-        expect(post.videos).to be_empty
+        expect(post.attachments).to be_empty
       end
 
       context 'with aspect_ids' do
         it 'it marks the videos as non-public if the post is non-public' do
-          post = PostManager::PeoplePostCreationService.call(post_params.merge!(user: user_1, videos: videos))
-          post.videos.each do |video|
+          post = PostManager::PeoplePostCreationService.call(post_params.merge!(user: user_1, attachments: videos))
+          post.attachments.video.each do |video|
             expect(video.public).to be_falsey
           end
         end
@@ -121,8 +120,8 @@ RSpec.describe PostManager::PeoplePostCreationService, type: :service do
         it 'creates aspect_visibilities for the Video' do
           user_1.aspects.create(name: 'another aspect')
 
-          post = PostManager::PeoplePostCreationService.call(post_params.merge!(user: user_1, videos: videos))
-          post.videos.each do |video|
+          post = PostManager::PeoplePostCreationService.call(post_params.merge!(user: user_1, attachments: videos))
+          post.attachments.video.each do |video|
             expect(video.aspect_visibilities.map(&:aspect)).to eq([aspect])
           end
         end
