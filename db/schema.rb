@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2018_12_05_063157) do
+ActiveRecord::Schema.define(version: 2018_12_06_135814) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -90,6 +90,30 @@ ActiveRecord::Schema.define(version: 2018_12_05_063157) do
     t.index ["user_id"], name: "index_friendships_on_user_id"
   end
 
+  create_table "media_attachments", force: :cascade do |t|
+    t.boolean "public", default: false, null: false
+    t.string "kind", null: false
+    t.string "guid", null: false
+    t.string "title"
+    t.text "description"
+    t.text "remote_file_path"
+    t.string "remote_file_name"
+    t.string "random_string"
+    t.string "file"
+    t.integer "views_count"
+    t.string "content_type"
+    t.integer "size"
+    t.json "file_meta"
+    t.string "attachable_type"
+    t.bigint "attachable_id"
+    t.bigint "author_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["attachable_type", "attachable_id"], name: "index_media_attachments_on_attachable_type_and_attachable_id"
+    t.index ["author_id"], name: "index_media_attachments_on_person_id"
+    t.index ["guid"], name: "index_media_attachments_on_guid", unique: true
+  end
+
   create_table "people", force: :cascade do |t|
     t.string "profile_name", null: false
     t.string "guid", null: false
@@ -99,28 +123,6 @@ ActiveRecord::Schema.define(version: 2018_12_05_063157) do
     t.index ["guid"], name: "index_people_on_guid", unique: true
     t.index ["owner_id"], name: "index_people_on_owner_id", unique: true
     t.index ["profile_name"], name: "index_people_on_profile_name", unique: true
-  end
-
-  create_table "pictures", force: :cascade do |t|
-    t.boolean "public", default: false, null: false
-    t.string "guid", null: false
-    t.string "title"
-    t.text "description"
-    t.text "remote_image_path"
-    t.string "remote_image_name"
-    t.string "random_string"
-    t.integer "height"
-    t.integer "width"
-    t.string "processed_image"
-    t.integer "views_count"
-    t.bigint "author_id", null: false
-    t.string "imageable_type"
-    t.bigint "imageable_id"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["author_id"], name: "index_pictures_on_person_id"
-    t.index ["guid"], name: "index_pictures_on_guid", unique: true
-    t.index ["imageable_type", "imageable_id"], name: "index_pictures_on_imageable_type_and_imageable_id"
   end
 
   create_table "posts", force: :cascade do |t|
@@ -187,29 +189,6 @@ ActiveRecord::Schema.define(version: 2018_12_05_063157) do
     t.index ["username"], name: "index_users_on_username", unique: true
   end
 
-  create_table "videos", force: :cascade do |t|
-    t.boolean "public", default: false, null: false
-    t.string "guid", null: false
-    t.string "title"
-    t.text "description"
-    t.text "remote_video_path"
-    t.string "remote_video_name"
-    t.string "random_string"
-    t.string "duration"
-    t.integer "height"
-    t.integer "width"
-    t.string "processed_video"
-    t.integer "views_count"
-    t.bigint "author_id", null: false
-    t.string "videoable_type"
-    t.bigint "videoable_id"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["author_id"], name: "index_videos_on_person_id"
-    t.index ["guid"], name: "index_videos_on_guid", unique: true
-    t.index ["videoable_type", "videoable_id"], name: "index_videos_on_videoable_type_and_videoable_id"
-  end
-
   create_table "votes", force: :cascade do |t|
     t.boolean "positive"
     t.string "guid"
@@ -235,9 +214,8 @@ ActiveRecord::Schema.define(version: 2018_12_05_063157) do
   add_foreign_key "follows", "people", column: "following_id"
   add_foreign_key "friendships", "people", column: "friend_id", name: "friendships_friend_id_fk", on_delete: :cascade
   add_foreign_key "friendships", "users"
+  add_foreign_key "media_attachments", "people", column: "author_id", name: "media_attachments_author_id_fk", on_delete: :cascade
   add_foreign_key "people", "users", column: "owner_id"
-  add_foreign_key "pictures", "people", column: "author_id", name: "pictures_author_id_fk", on_delete: :cascade
   add_foreign_key "profiles", "people", on_delete: :cascade
-  add_foreign_key "videos", "people", column: "author_id", name: "videos_author_id_fk", on_delete: :cascade
   add_foreign_key "votes", "people", column: "author_id", name: "votes_author_id_fk", on_delete: :cascade
 end
