@@ -9,7 +9,7 @@ RSpec.describe AspectVisibility, type: :model do
   let(:post) { create(:post) }
   let(:post_in_aspect) { create(:post_in_aspect) }
   let(:aspect) { create(:aspect) }
-  let(:picture_with_same_id) { create(:picture, id: post_in_aspect.id) }
+  let(:picture_with_same_id) { create(:image_attachment, id: post_in_aspect.id) }
 
   describe '.create' do
     it 'creates object when attributes are fine' do

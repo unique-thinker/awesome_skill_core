@@ -13,7 +13,7 @@ RSpec.describe Api::V1::ProfilesController, type: :request do
   let(:valid_profile_params) { build(:profile).attributes.except('id', 'person_id', 'created_at', 'updated_at') }
   let(:updated_profile_pic_params) {
      {
-       image_file: Rack::Test::UploadedFile.new(
+       file: Rack::Test::UploadedFile.new(
          Rails.root.join('spec', 'fixtures', 'picture.png').to_s, 'image/png'
        )
      }}
@@ -140,7 +140,7 @@ RSpec.describe Api::V1::ProfilesController, type: :request do
               params:  {profile: updated_profile_pic_params},
               headers: api_headers(response.headers)
         expect(response).to have_http_status(:no_content)
-        expect(Picture.count).to eq 1
+        expect(MediaAttachment.count).to eq 1
       end
     end
   end
