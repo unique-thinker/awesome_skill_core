@@ -3,7 +3,7 @@
 FactoryBot.define do
   factory :category do
     name { Faker::Company.profession }
-    kind { Category.kinds.keys.sample }
+    type { Category.types.keys.sample }
 
     factory :sub_category do
       association :parent, factory: :category

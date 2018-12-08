@@ -5,10 +5,10 @@ require 'rails_helper'
 RSpec.describe Category, type: :model do
   it { is_expected.to respond_to(:guid) }
   it { is_expected.to respond_to(:name) }
-  it { is_expected.to respond_to(:kind) }
+  it { is_expected.to respond_to(:type) }
   it { should validate_presence_of(:guid) }
   it { should validate_presence_of(:name) }
-  it { should validate_presence_of(:kind) }
+  it { should validate_presence_of(:type) }
   it { should have_many(:categorizations) }
   it { should have_many(:posts).through(:categorizations) }
 
@@ -23,7 +23,7 @@ RSpec.describe Category, type: :model do
     end
 
     it 'type should be ENUM' do
-      expect { build(:category, kind: 'post') }.to raise_error(ArgumentError)
+      expect { build(:category, type: 'post') }.to raise_error(ArgumentError)
     end
   end
 end

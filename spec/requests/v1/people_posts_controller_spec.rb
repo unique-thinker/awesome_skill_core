@@ -12,8 +12,8 @@ RSpec.describe Api::V1::PeoplePostsController, type: :request do
   let(:aspect_1) { user.aspects.first }
   let(:aspect_2) { user.aspects.build(name: 'my apsect') }
   let(:people_post) { build(:post) }
-  let(:picture_category_ids) { build_list(:category, 5, kind: :picture) }
-  let(:video_category_ids) { build_list(:category, 5, kind: :video) }
+  let(:picture_category_ids) { build_list(:category, 5, type: :picture) }
+  let(:video_category_ids) { build_list(:category, 5, type: :video) }
 
   let(:post_valid_params) {
     {

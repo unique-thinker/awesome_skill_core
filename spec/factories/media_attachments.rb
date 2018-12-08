@@ -5,7 +5,7 @@ FactoryBot.define do
     title { Faker::Hipster.sentence }
     description { Faker::Hipster.paragraph }
     random_string { SecureRandom.hex(10) }
-    kind { MediaAttachment.kinds.keys.sample }
+    type { MediaAttachment.types.keys.sample }
     views_count { rand(1..100_000) }
     association :author, factory: :person
     association :attachable, factory: :post
