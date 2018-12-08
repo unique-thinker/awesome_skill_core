@@ -40,7 +40,7 @@ ActiveRecord::Schema.define(version: 2018_12_06_135814) do
     t.string "guid", null: false
     t.string "name", null: false
     t.string "ancestry"
-    t.string "kind", null: false
+    t.string "type", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["ancestry"], name: "index_categories_on_ancestry"
@@ -81,7 +81,7 @@ ActiveRecord::Schema.define(version: 2018_12_06_135814) do
   create_table "friendships", force: :cascade do |t|
     t.bigint "user_id", null: false
     t.bigint "friend_id", null: false
-    t.string "kind", null: false
+    t.string "type", null: false
     t.string "status", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -92,7 +92,7 @@ ActiveRecord::Schema.define(version: 2018_12_06_135814) do
 
   create_table "media_attachments", force: :cascade do |t|
     t.boolean "public", default: false, null: false
-    t.string "kind", null: false
+    t.string "type", null: false
     t.string "guid", null: false
     t.string "title"
     t.text "description"

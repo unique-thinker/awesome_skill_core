@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class MediaAttachment < ApplicationRecord
+  self.inheritance_column = nil
+
   include Fields::Author
   include Shareable
 
@@ -8,7 +10,12 @@ class MediaAttachment < ApplicationRecord
   belongs_to :attachable, polymorphic: true
 
   # ENUM
-  enum kind: {video: 'video', image: 'image'}
+  enum type: {video: 'video', image: 'image'}
+
+  # Validations
+  validates :type, inclusion: {in: types.keys}
+  validates :guid, :type, presence: true
+  validates :guid, uniqueness: true
 
   mount_uploader :file, MediaUploader
 

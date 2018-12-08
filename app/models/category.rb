@@ -1,10 +1,12 @@
 # frozen_string_literal: true
 
 class Category < ApplicationRecord
+  self.inheritance_column = nil
+
   include Fields::Guid
 
   # ENUM
-  enum kind: {video: 'video', picture: 'picture'}
+  enum type: {video: 'video', picture: 'picture'}
 
   # Association
   has_ancestry
@@ -12,7 +14,7 @@ class Category < ApplicationRecord
   has_many :posts, through: :categorizations
 
   # Validations
-  validates :kind, inclusion: {in: kinds.keys}
-  validates :name, :guid, :kind, presence: true
+  validates :type, inclusion: {in: types.keys}
+  validates :name, :guid, :type, presence: true
   validates :guid, uniqueness: true
 end

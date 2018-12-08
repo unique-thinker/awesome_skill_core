@@ -27,7 +27,7 @@ class MediaUploader < CarrierWave::Uploader::Base
   end
 
   def base_store_dir
-    "uploads/#{model.kind}/#{model.guid[0..(model.guid.size / 2)]}"
+    "uploads/#{model.type}/#{model.guid[0..(model.guid.size / 2)]}"
   end
 
   # Override the filename of the uploaded files:
@@ -91,7 +91,7 @@ class MediaUploader < CarrierWave::Uploader::Base
   def save_content_type_and_size_in_model
     if file.content_type
       model.content_type = file.content_type
-      model.kind = file.content_type.split('/').first.to_sym
+      model.type = file.content_type.split('/').first.to_sym
     end
     model.size = file.size
   end

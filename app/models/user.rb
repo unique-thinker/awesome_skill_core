@@ -79,14 +79,14 @@ class User < ApplicationRecord
 
   ######### Friend Request #########
   def send_friend_request(friend)
-    friendships.build(friend: friend, kind: :social_friend, status: :pending)
+    friendships.build(friend: friend, type: :social_friend, status: :pending)
     save
   end
 
   def accept_friend_request(friend)
     friend_request = friend.owner.friendships.where(friend: person).pending.first
     transaction do
-      friend_request&.accepted! && friendships.build(friend: friend, kind: :social_friend).accepted!
+      friend_request&.accepted! && friendships.build(friend: friend, type: :social_friend).accepted!
     end
   end
 

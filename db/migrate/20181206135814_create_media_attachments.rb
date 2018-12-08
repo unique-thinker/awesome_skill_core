@@ -4,7 +4,7 @@ class CreateMediaAttachments < ActiveRecord::Migration[5.2]
   def change
     create_table :media_attachments do |t|
       t.boolean :public, default: false, null: false
-      t.string :kind, null: false
+      t.string :type, null: false
       t.string :guid, index: {unique: true}, null: false
       t.string :title
       t.text :description
