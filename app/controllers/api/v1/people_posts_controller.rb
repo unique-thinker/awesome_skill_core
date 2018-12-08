@@ -96,6 +96,6 @@ class Api::V1::PeoplePostsController < Api::BaseController
         post.categorizations.build(category: video_category)
       end
     end
-  rescue ActiveRecord::RecordNotFound => e
+  rescue ActiveRecord::RecordNotFound
   end
 end
