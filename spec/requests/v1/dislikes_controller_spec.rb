@@ -18,6 +18,7 @@ RSpec.describe Api::V1::DislikesController, type: :request do
       it 'responds with 401 Unauthorized' do
         post create_dislike_path, headers: api_headers
         expect(response).to have_http_status(:unauthorized)
+        expect(user_post.dislikes.count).to eq 0
       end
     end
 
@@ -32,6 +33,9 @@ RSpec.describe Api::V1::DislikesController, type: :request do
                params:  dislike_valid_params,
                headers: api_headers(response.headers)
           expect(response).to have_http_status(201)
+          dislikes = user_post.dislikes
+          expect(dislikes.count).to eq 1
+          expect(PublicActivity::Activity.where(trackable: dislikes).count).to eq 1
         end
 
         it 'dislike a like post and destroy like' do
@@ -40,6 +44,10 @@ RSpec.describe Api::V1::DislikesController, type: :request do
                params:  dislike_valid_params,
                headers: api_headers(response.headers)
           expect(response).to have_http_status(201)
+          expect(user_post.likes.count).to eq 0
+          dislikes = user_post.dislikes
+          expect(dislikes.count).to eq 1
+          expect(PublicActivity::Activity.where(trackable: dislikes).count).to eq 1
         end
       end
 
@@ -51,6 +59,9 @@ RSpec.describe Api::V1::DislikesController, type: :request do
                headers: api_headers(response.headers)
           expect(user).not_to receive(:dislike!)
           expect(response).to have_http_status(404)
+          dislikes = user_post.dislikes
+          expect(dislikes.count).to eq 0
+          expect(PublicActivity::Activity.where(trackable: dislikes).count).to eq 0
         end
       end
     end

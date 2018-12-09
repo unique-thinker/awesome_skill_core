@@ -40,6 +40,8 @@ RSpec.describe Api::V1::PeoplePostsController, type: :request do
              params:  post_valid_params,
              headers: api_headers(response.headers)
         expect(response).to have_http_status(201)
+        expect(person.posts.count).to eq 1
+        expect(PublicActivity::Activity.count).to eq 1
       end
 
       it 'should not create post with invalid params' do
@@ -47,6 +49,8 @@ RSpec.describe Api::V1::PeoplePostsController, type: :request do
              params:  post_valid_params.merge(post_message: {text: 'abcde12345' * 8000}),
              headers: api_headers(response.headers)
         expect(response).to have_http_status(403)
+        expect(person.posts.count).to eq 0
+        expect(PublicActivity::Activity.count).to eq 0
       end
 
       context 'with aspect_ids' do
@@ -59,6 +63,8 @@ RSpec.describe Api::V1::PeoplePostsController, type: :request do
                params:  post_valid_params,
                headers: api_headers(response.headers)
           expect(response).to have_http_status(201)
+          expect(person.posts.count).to eq 1
+          expect(PublicActivity::Activity.count).to eq 1
           post = Post.find_by(text: people_post.text)
           expect(post.aspect_visibilities.map(&:aspect)).to eq([aspect_1])
         end
@@ -68,6 +74,8 @@ RSpec.describe Api::V1::PeoplePostsController, type: :request do
                params:  post_valid_params.merge(aspect_ids: aspect_1.id.to_s),
                headers: api_headers(response.headers)
           expect(response).to have_http_status(201)
+          expect(person.posts.count).to eq 1
+          expect(PublicActivity::Activity.count).to eq 1
           post = Post.find_by(text: people_post.text)
           expect(post.aspect_visibilities.map(&:aspect)).to eq([aspect_1])
         end
@@ -77,6 +85,8 @@ RSpec.describe Api::V1::PeoplePostsController, type: :request do
                params:  post_valid_params.merge(aspect_ids: ['public']),
                headers: api_headers(response.headers)
           expect(response).to have_http_status(201)
+          expect(person.posts.count).to eq 1
+          expect(PublicActivity::Activity.count).to eq 1
           post = Post.find_by(text: people_post.text)
           expect(post.public).to be_truthy
         end
@@ -86,6 +96,8 @@ RSpec.describe Api::V1::PeoplePostsController, type: :request do
                params:  post_valid_params.merge(aspect_ids: 'public'),
                headers: api_headers(response.headers)
           expect(response).to have_http_status(201)
+          expect(person.posts.count).to eq 1
+          expect(PublicActivity::Activity.count).to eq 1
           post = Post.find_by(text: people_post.text)
           expect(post.public).to be_truthy
         end
@@ -95,6 +107,8 @@ RSpec.describe Api::V1::PeoplePostsController, type: :request do
                params:  post_valid_params.merge(aspect_ids: ['all_aspects']),
                headers: api_headers(response.headers)
           expect(response).to have_http_status(201)
+          expect(person.posts.count).to eq 1
+          expect(PublicActivity::Activity.count).to eq 1
           post = Post.find_by(text: people_post.text)
           expect(post.aspect_visibilities.map(&:aspect)).to match_array(user.aspects)
         end
@@ -104,6 +118,8 @@ RSpec.describe Api::V1::PeoplePostsController, type: :request do
                params:  post_valid_params.merge(aspect_ids: 'all_aspects'),
                headers: api_headers(response.headers)
           expect(response).to have_http_status(201)
+          expect(person.posts.count).to eq 1
+          expect(PublicActivity::Activity.count).to eq 1
           post = Post.find_by(text: people_post.text)
           expect(post.aspect_visibilities.map(&:aspect)).to match_array(user.aspects)
         end
@@ -122,7 +138,9 @@ RSpec.describe Api::V1::PeoplePostsController, type: :request do
                params:  post_valid_params.merge(files: @image_files),
                headers: api_headers(response.headers)
           expect(response).to have_http_status(201)
-          expect(Post.last.attachments.image.count).to eq 1
+          expect(person.posts.count).to eq 1
+          expect(PublicActivity::Activity.count).to eq 1
+          expect(person.posts.last.attachments.image.count).to eq 1
         end
 
         context 'with categories' do
@@ -138,7 +156,9 @@ RSpec.describe Api::V1::PeoplePostsController, type: :request do
                  params:  post_valid_params.merge(files: @image_files),
                  headers: api_headers(response.headers)
             expect(response).to have_http_status(201)
-            post = Post.last
+            post = person.posts.last
+            expect(person.posts.count).to eq 1
+            expect(PublicActivity::Activity.count).to eq 1
             expect(post.attachments.image.count).to eq 1
             expect(post.categories.count).to eq 1
             expect(post.categories.first.id).to eq post_valid_params[:category_ids]
@@ -150,7 +170,9 @@ RSpec.describe Api::V1::PeoplePostsController, type: :request do
                  params:  post_valid_params.merge(files: @image_files),
                  headers: api_headers(response.headers)
             expect(response).to have_http_status(201)
-            post = Post.last
+            expect(person.posts.count).to eq 1
+            expect(PublicActivity::Activity.count).to eq 1
+            post = person.posts.last
             expect(post.attachments.image.count).to eq 1
             expect(post.categories.count).to eq 0
           end
@@ -162,7 +184,9 @@ RSpec.describe Api::V1::PeoplePostsController, type: :request do
                  params:  post_valid_params.merge(files: @image_files),
                  headers: api_headers(response.headers)
             expect(response).to have_http_status(201)
-            post = Post.last
+            expect(person.posts.count).to eq 1
+            expect(PublicActivity::Activity.count).to eq 1
+            post = person.posts.last
             expect(post.attachments.image.count).to eq 1
             expect(post.categories.count).to eq 0
           end
@@ -182,7 +206,9 @@ RSpec.describe Api::V1::PeoplePostsController, type: :request do
                params:  post_valid_params.merge(files: @video_files),
                headers: api_headers(response.headers)
           expect(response).to have_http_status(201)
-          expect(Post.last.attachments.video.count).to eq 1
+          expect(person.posts.count).to eq 1
+          expect(PublicActivity::Activity.count).to eq 1
+          expect(person.posts.last.attachments.video.count).to eq 1
         end
 
         context 'with categories' do
@@ -198,7 +224,9 @@ RSpec.describe Api::V1::PeoplePostsController, type: :request do
                  params:  post_valid_params.merge(files: @video_files),
                  headers: api_headers(response.headers)
             expect(response).to have_http_status(201)
-            post = Post.last
+            expect(person.posts.count).to eq 1
+            expect(PublicActivity::Activity.count).to eq 1
+            post = person.posts.last
             expect(post.attachments.video.count).to eq 1
             expect(post.categories.count).to eq 1
             expect(post.categories.first.id).to eq post_valid_params[:category_ids]
@@ -210,7 +238,9 @@ RSpec.describe Api::V1::PeoplePostsController, type: :request do
                  params:  post_valid_params.merge(files: @video_files),
                  headers: api_headers(response.headers)
             expect(response).to have_http_status(201)
-            post = Post.last
+            expect(person.posts.count).to eq 1
+            expect(PublicActivity::Activity.count).to eq 1
+            post = person.posts.last
             expect(post.attachments.video.count).to eq 1
             expect(post.categories.count).to eq 0
           end
@@ -222,7 +252,9 @@ RSpec.describe Api::V1::PeoplePostsController, type: :request do
                  params:  post_valid_params.merge(files: @video_files),
                  headers: api_headers(response.headers)
             expect(response).to have_http_status(201)
-            post = Post.last
+            expect(person.posts.count).to eq 1
+            expect(PublicActivity::Activity.count).to eq 1
+            post = person.posts.last
             expect(post.attachments.video.count).to eq 1
             expect(post.categories.count).to eq 0
           end
