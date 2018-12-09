@@ -42,6 +42,9 @@ gem 'sidekiq', '5.2.3'
 # ActiveRecord model to be organized in a tree structure
 gem 'ancestry', '3.0.5'
 
+# Activity tracking for ActiveRecord
+gem 'public_activity', '1.6.2'
+
 # Build JSON APIs with ease. Read more: https://github.com/rails/jbuilder
 # gem 'jbuilder', '~> 2.5'
 # Use Redis adapter to run Action Cable in production
