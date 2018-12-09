@@ -3,10 +3,15 @@
 class Post < ApplicationRecord
   include Shareable
   include Fields::Votable
+  # Activity
+  include ActivityCallbacks
+  include PublicActivity::Model
+  tracked only: [:create], owner: Proc.new{ |controller, model|  controller && controller.current_user }
 
   # Association
   belongs_to :postable, polymorphic: true
   has_many :attachments, as: :attachable, class_name: 'MediaAttachment', dependent: :destroy
+  has_many :comments, as: :commentable, dependent: :destroy
   has_many :categorizations
   has_many :categories, through: :categorizations
 

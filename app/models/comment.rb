@@ -3,6 +3,10 @@
 class Comment < ApplicationRecord
   include Fields::Guid
   include Fields::Author
+  # Activity
+  include ActivityCallbacks
+  include PublicActivity::Model
+  tracked only: [:create], owner: Proc.new{ |controller, model|  controller && controller.current_user }
 
   # Association
   belongs_to :commentable, polymorphic: true
