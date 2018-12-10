@@ -10,7 +10,7 @@ class Category < ApplicationRecord
 
   # Association
   has_ancestry
-  has_many :categorizations
+  has_many :categorizations, dependent: :destroy
   has_many :posts, through: :categorizations
 
   # Validations

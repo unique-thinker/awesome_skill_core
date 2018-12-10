@@ -12,7 +12,7 @@ class Post < ApplicationRecord
   belongs_to :postable, polymorphic: true
   has_many :attachments, as: :attachable, class_name: 'MediaAttachment', dependent: :destroy
   has_many :comments, as: :commentable, dependent: :destroy
-  has_many :categorizations
+  has_many :categorizations, dependent: :destroy
   has_many :categories, through: :categorizations
 
   # Validations
