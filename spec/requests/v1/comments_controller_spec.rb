@@ -124,7 +124,7 @@ RSpec.describe Api::V1::CommentsController, type: :request do
         end
 
         it 'does not let the user destroy comments they do not own' do
-          comment2 = another_user.comment!(user_post, 'hey')
+          another_user.comment!(user_post, 'hey')
           comment_count = user_post.comments.count
           delete destroy_comment_path,
                  params:  {id: comment.id},

@@ -86,7 +86,7 @@ RSpec.describe Api::V1::LikesController, type: :request do
       it 'lets a user destroy their like' do
         like = user_post.likes.last
         delete destroy_like_path,
-          params:  like_valid_params.merge(id: like.id),
+               params:  like_valid_params.merge(id: like.id),
                headers: api_headers(response.headers)
         expect(response).to have_http_status(204)
         expect(PublicActivity::Activity.where(trackable: like).count).to eq 0
