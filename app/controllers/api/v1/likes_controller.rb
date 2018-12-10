@@ -31,8 +31,7 @@ class Api::V1::LikesController < Api::BaseController
       render json: {success: false, error: 'Failed to unlike.'}, status: :not_found
       return
     end
-    if current_user.owns?(like)
-      like.destroy!
+    if current_user.owns?(like) && like.destroy
       render json: {}, status: :no_content
     else
       render json: {}, status: :forbidden

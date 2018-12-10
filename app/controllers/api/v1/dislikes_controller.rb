@@ -31,8 +31,7 @@ class Api::V1::DislikesController < Api::BaseController
       render json: {success: false, error: 'Failed to remove dislike.'}, status: :not_found
       return
     end
-    if current_user.owns?(dislike)
-      dislike.destroy!
+    if current_user.owns?(dislike) && dislike.destroy
       render json: {}, status: :no_content
     else
       render json: {}, status: :forbidden

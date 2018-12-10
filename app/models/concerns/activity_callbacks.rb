@@ -8,7 +8,7 @@ module ActivityCallbacks
   end
 
   def remove_activity
-    activity = PublicActivity::Activity.find_by(trackable_id: self.id, trackable_type: self.class.to_s, key: "#{self.class.to_s.downcase}.create")
+    activity = PublicActivity::Activity.find_by(trackable: self, key: "#{self.class.to_s.downcase}.create")
     activity.destroy if activity.present?
     true
   end
