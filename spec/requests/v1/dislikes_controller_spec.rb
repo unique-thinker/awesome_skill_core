@@ -5,7 +5,7 @@ require 'rails_helper'
 RSpec.describe Api::V1::DislikesController, type: :request do
   # URL
   let(:create_dislike_path) { "/posts/#{user_post.id}/dislikes" }
-  let(:destroy_dislike_path) { "/posts/#{user_post.id}/dislikes/#{dislike.id}" }
+  let(:destroy_dislike_path) { "/posts/#{user_post.id}/dislikes/#{user_post.dislikes.first&.id}" }
 
   let(:dislike) { build(:dislike) }
   let!(:user_post) { dislike.parent }
@@ -77,15 +77,19 @@ RSpec.describe Api::V1::DislikesController, type: :request do
 
     context 'when authenticated' do
       before do
-        dislike.save
         login(user)
+        post create_dislike_path,
+             params:  dislike_valid_params,
+             headers: api_headers(response.headers)
       end
 
       it 'lets a user destroy their dislike' do
+        dislike = user_post.dislikes.first
         delete destroy_dislike_path,
                params:  dislike_valid_params.merge(id: dislike.id),
                headers: api_headers(response.headers)
         expect(response).to have_http_status(204)
+        expect(PublicActivity::Activity.where(trackable: dislike).count).to eq 0
       end
 
       it 'does not a user destroy other dislikes' do
@@ -97,6 +101,7 @@ RSpec.describe Api::V1::DislikesController, type: :request do
                headers: api_headers(response.headers)
         expect(response).to have_http_status(403)
         expect(Dislike.count).to eq(dislike_count)
+        expect(PublicActivity::Activity.where(trackable: dislike2).count).to eq 1
       end
     end
   end

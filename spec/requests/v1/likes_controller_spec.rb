@@ -5,7 +5,7 @@ require 'rails_helper'
 RSpec.describe Api::V1::LikesController, type: :request do
   # URL
   let(:create_like_path) { "/posts/#{user_post.id}/likes" }
-  let(:destroy_like_path) { "/posts/#{user_post.id}/likes/#{like.id}" }
+  let(:destroy_like_path) { "/posts/#{user_post.id}/likes/#{user_post.likes.first&.id}" }
 
   let(:like) { build(:like) }
   let!(:user_post) { like.parent }
@@ -77,15 +77,19 @@ RSpec.describe Api::V1::LikesController, type: :request do
 
     context 'when authenticated' do
       before do
-        like.save
         login(user)
+        post create_like_path,
+             params:  like_valid_params,
+             headers: api_headers(response.headers)
       end
 
       it 'lets a user destroy their like' do
+        like = user_post.likes.last
         delete destroy_like_path,
-               params:  like_valid_params.merge(id: like.id),
+          params:  like_valid_params.merge(id: like.id),
                headers: api_headers(response.headers)
         expect(response).to have_http_status(204)
+        expect(PublicActivity::Activity.where(trackable: like).count).to eq 0
       end
 
       it 'does not let a user destroy other likes' do
@@ -97,6 +101,7 @@ RSpec.describe Api::V1::LikesController, type: :request do
                headers: api_headers(response.headers)
         expect(response).to have_http_status(403)
         expect(Like.count).to eq(like_count)
+        expect(PublicActivity::Activity.where(trackable: like2).count).to eq 1
       end
     end
   end

@@ -91,14 +91,19 @@ RSpec.describe Api::V1::CommentsController, type: :request do
                  params:  {id: comment.id},
                  headers: api_headers(response.headers)
           expect(response).to have_http_status(204)
+          expect(user_post.comments.count).to eq 0
+          expect(PublicActivity::Activity.where(trackable: comment).count).to eq 0
         end
 
         it 'lets the user destroy other people\'s comments' do
-          comment = another_user.comment!(user_post, 'hey')
-          delete "/posts/#{user_post.id}/comments/#{comment.id}",
-                 params:  {id: comment.id},
+          comment2 = another_user.comment!(user_post, 'hey')
+          comment_count = user_post.comments.count
+          delete "/posts/#{user_post.id}/comments/#{comment2.id}",
+                 params:  {id: comment2.id},
                  headers: api_headers(response.headers)
           expect(response).to have_http_status(204)
+          expect(user_post.comments.count).to eq comment_count - 1
+          expect(PublicActivity::Activity.where(trackable: comment2).count).to eq 0
         end
       end
 
@@ -108,19 +113,25 @@ RSpec.describe Api::V1::CommentsController, type: :request do
         end
 
         it 'lets the user delete their comment' do
-          comment = another_user.comment!(user_post, 'hey')
-          delete "/posts/#{user_post.id}/comments/#{comment.id}",
-                 params:  {id: comment.id},
+          comment2 = another_user.comment!(user_post, 'hey')
+          comment_count = user_post.comments.count
+          delete "/posts/#{user_post.id}/comments/#{comment2.id}",
+                 params:  {id: comment2.id},
                  headers: api_headers(response.headers)
           expect(response).to have_http_status(204)
+          expect(user_post.comments.count).to eq comment_count - 1
+          expect(PublicActivity::Activity.where(trackable: comment2).count).to eq 0
         end
 
         it 'does not let the user destroy comments they do not own' do
-          @comment = another_user.comment!(user_post, 'hey')
+          comment2 = another_user.comment!(user_post, 'hey')
+          comment_count = user_post.comments.count
           delete destroy_comment_path,
                  params:  {id: comment.id},
                  headers: api_headers(response.headers)
           expect(response).to have_http_status(403)
+          expect(user_post.comments.count).to eq comment_count
+          expect(PublicActivity::Activity.where(key: 'comment.create').count).to eq comment_count
         end
 
         it 'return 404 on nonexistent comment' do

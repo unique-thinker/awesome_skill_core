@@ -290,6 +290,7 @@ RSpec.describe Api::V1::PeoplePostsController, type: :request do
                  params:  {id: people_post.id},
                  headers: api_headers(response.headers)
           expect(response).to have_http_status(204)
+          expect(PublicActivity::Activity.where(trackable: people_post).count).to eq 0
         end
       end
 
@@ -302,6 +303,7 @@ RSpec.describe Api::V1::PeoplePostsController, type: :request do
                  params:  {id: people_post.id},
                  headers: api_headers(response.headers)
           expect(response).to have_http_status(404)
+          expect(PublicActivity::Activity.where(trackable: people_post).count).to eq 1
         end
       end
     end
