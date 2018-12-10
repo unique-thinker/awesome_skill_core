@@ -5,6 +5,7 @@ class CreateActivities < (ActiveRecord.version.release < Gem::Version.new('5.2.0
   # Create table
   def self.up
     create_table :activities do |t|
+      t.string :guid, index: {unique: true}, null: false
       t.belongs_to :trackable, polymorphic: true
       t.belongs_to :owner, polymorphic: true
       t.string  :key

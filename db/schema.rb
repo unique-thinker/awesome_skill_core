@@ -16,6 +16,7 @@ ActiveRecord::Schema.define(version: 2018_12_08_054424) do
   enable_extension "plpgsql"
 
   create_table "activities", force: :cascade do |t|
+    t.string "guid", null: false
     t.string "trackable_type"
     t.bigint "trackable_id"
     t.string "owner_type"
@@ -26,6 +27,7 @@ ActiveRecord::Schema.define(version: 2018_12_08_054424) do
     t.bigint "recipient_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["guid"], name: "index_activities_on_guid", unique: true
     t.index ["owner_id", "owner_type"], name: "index_activities_on_owner_id_and_owner_type"
     t.index ["owner_type", "owner_id"], name: "index_activities_on_owner_type_and_owner_id"
     t.index ["recipient_id", "recipient_type"], name: "index_activities_on_recipient_id_and_recipient_type"
