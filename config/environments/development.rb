@@ -58,4 +58,15 @@ Rails.application.configure do
   config.action_mailer.default_url_options = {host: 'localhost:3000'}
   config.action_mailer.delivery_method = :smtp
   config.action_mailer.smtp_settings = {address: 'localhost', port: 1025}
+
+  # Bullet gem configuration
+  config.after_initialize do
+    Bullet.enable = true
+    Bullet.alert         = false
+    Bullet.bullet_logger = true
+    Bullet.console       = true
+    # Bullet.growl         = true
+    Bullet.rails_logger  = true
+    Bullet.add_footer    = true
+  end
 end

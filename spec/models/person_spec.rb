@@ -6,12 +6,15 @@ RSpec.describe Person, type: :model do
   let!(:person_1) { create(:user).person }
   let(:person_2) { build(:user).person }
 
+  it { is_expected.to respond_to(:guid) }
   it { is_expected.to respond_to(:profile_name) }
   it { is_expected.to respond_to(:owner_id) }
   it { should validate_presence_of(:profile_name) }
   it { should validate_presence_of(:profile) }
   it { should belong_to(:owner) }
   it { should have_one(:profile) }
+  it { should have_many(:posts).dependent(:destroy) }
+  it { should have_many(:friendships).dependent(:destroy) }
 
   it 'always has a profile' do
     expect(Person.new.profile).not_to be_nil

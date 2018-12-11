@@ -30,8 +30,10 @@ RSpec.describe User, type: :model do
   it { should validate_presence_of(:password) }
   it { should validate_presence_of(:person) }
   it { should validate_confirmation_of(:password) }
-  it { should have_one(:person) }
-
+  it { should have_one(:person).dependent(:destroy) }
+  it { should have_many(:aspects).dependent(:destroy) }
+  it { should have_many(:friendships) }
+  it { should have_many(:friends).through(:friendships).source(:friend) }
 
   describe 'validation' do
     describe 'of username' do

@@ -98,4 +98,21 @@ RSpec.configure do |config|
       with.library :rails
     end
   end
+
+  # Bullet gem configuration
+  if Bullet.enable?
+    config.before(:each) do
+      Bullet.start_request
+    end
+
+    config.after(:each) do
+      Bullet.perform_out_of_channel_notifications if Bullet.notification?
+      Bullet.end_request
+    end
+  end
+
+  # CarrierWave
+  config.after(:all) do
+    FileUtils.rm_rf(CarrierWave::Uploader::Base.root) if Rails.env.test?
+  end
 end

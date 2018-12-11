@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module CountriesWithStates
   # def countries_with_states(region='Asia', locale = 'en')
   #   countries_with_states = []
@@ -18,11 +20,11 @@ module CountriesWithStates
     country.map do |c|
       h = {}
       h[c.name] = {
-        id: c.alpha2,
-        states: c.subdivision_names_with_codes.map {|s| {name: s[0]}}
+        id:     c.alpha2,
+        states: c.subdivision_names_with_codes.map {|s| {name: s[0]} }
       }
       country_with_states.merge!(h)
-    end.sort
+    end
     country_with_states
   end
 end

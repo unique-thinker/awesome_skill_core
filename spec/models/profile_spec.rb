@@ -5,6 +5,7 @@ require 'rails_helper'
 RSpec.describe Profile, type: :model do
   let(:profile) { build(:profile) }
 
+  it { is_expected.to respond_to(:guid) }
   it { is_expected.to respond_to(:first_name) }
   it { is_expected.to respond_to(:last_name) }
   it { is_expected.to respond_to(:birthday) }
@@ -72,7 +73,7 @@ RSpec.describe Profile, type: :model do
       it 'should have only M or F' do
         profile.gender = 'invalid gender'
         expect(profile).not_to be_valid
-        expect(profile.errors[:gender]).to include("must be Male or Female")
+        expect(profile.errors[:gender]).to include('must be Male or Female')
       end
     end
   end

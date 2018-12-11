@@ -18,7 +18,21 @@ class Api::V1::ProfilesController < Api::BaseController
     if profile.update(profile_attrs)
       head :no_content
     else
-      render json: { success: false, errors: resource_errors(profile) }, status: :unprocessable_entity
+      render json: {success: false, errors: resource_errors(profile)}, status: :unprocessable_entity
+    end
+  end
+
+  def update_picture
+    profile = current_user.person.profile
+    @profile_picture = {media_file: params[:profile][:file]}
+    @profile_picture[:user] = current_user
+    @profile_picture[:public] = true
+    pic = MediaAttachmentService.call(@profile_picture)
+    profile.attachment = pic
+    if profile.save
+      head :no_content
+    else
+      render json: {success: false, errors: resource_errors(profile)}, status: :unprocessable_entity
     end
   end
 

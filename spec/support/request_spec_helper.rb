@@ -12,23 +12,24 @@ module Request
   module HeadersHelpers
     def headers
       {
-        CONTENT_TYPE: 'application/json; charset=utf-8',
-        ACCEPT:       'application/json'
+        'Content-Type': 'application/json; charset=utf-8',
+        Accept:         'application/json'
       }
     end
 
-    def api_header(version=1)
-      request.headers['Accept'] = "application/vnd.marketplace.v#{version}"
+    def normalize_headers(headers)
+      headers.slice('access-token', 'token-type', 'client', 'uid', 'expiry')
     end
 
-    def api_response_format(format=Mime::JSON)
-      request.headers['Accept'] = "#{request.headers['Accept']},#{format}"
-      request.headers['Content-Type'] = format.to_s
+    def api_header_version(version=1)
+      "application/vnd.awesome-skill.v#{version}"
     end
 
-    def include_default_accept_headers
-      api_header
-      api_response_format
+    # return headers
+    def api_headers(headers={}, format='json', version=1)
+      head = {}
+      head['Accept'] = "#{api_header_version(version)}+#{format}"
+      head.merge!(normalize_headers(headers))
     end
   end
 end
